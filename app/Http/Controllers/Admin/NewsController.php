@@ -1,0 +1,129 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\News;
+use App\CategoryRel;
+use App\Libs\Common;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use App\Http\Requests\AdminNews;
+use Illuminate\Support\Facades\Hash;
+
+class NewsController extends Controller
+{
+    // public function __construct()
+    // {
+    //     // 認証が必要
+    //     $this->middleware('auth')->except(['index', 'download', 'show']);
+    // }
+    // public function __construct()
+    // {
+    //     // 認証が必要
+    //     $this->middleware('auth');
+    // }
+    public function list()
+    {
+        //0.1秒遅らせる
+        usleep(100000);
+        $news = News::with('add_category')->orderBy('id', 'desc')->paginate(10);
+        return $news;
+    }
+
+    public function register(AdminNews $request)
+    {
+        $q = new News;
+        $q->fill($request->all())->save();
+    	CategoryRel::InsertRel($request->category, $q->id);
+        return $q->id;
+    }
+
+    public function update(AdminNews $request)
+    {
+        $q = News::findOrFail($request->id);
+        $q->fill($request->all())->save();
+        CategoryRel::DeleteRel($request->id);
+    	CategoryRel::InsertRel($request->category, $request->id);
+        return response(200);
+    }
+
+    public function detail(Request $request)
+    {
+        $news = News::with('category_rel')->find($request->id)->toArray();
+        //重要
+        $news["category"] = array();
+        foreach($news['category_rel'] as $k => $v) {
+            $news["category"][] = $v['category_id'];
+        }
+        return $news;
+    }
+
+    public function sarch(Request $request)
+    {
+        $q = DB::table('news');
+        if ($request->status) {
+            $q = $q->where('status', $request->status);
+        }
+        if ($request->freeword) {
+            $q = Common::fw_search($q, $request->freeword, ['title', 'text']);
+        }
+        //usleep(100000);
+        $news = $q->orderBy('id', 'desc')->paginate(10);
+
+        return $news;
+    }
+
+    public function selectbox(Request $request)
+    {
+        if ($request->mode == 1) {
+            $this->on($request);
+        }
+        if ($request->mode == 2) {
+            $this->off($request);
+        }
+        if ($request->mode == 9) {
+            $this->delete($request);
+        }
+        return response(200);
+    }
+
+    private function on($request)
+    {
+        News::whereIn('id', $request->vals)->update(['status' => 1]);
+    }
+
+    private function off($request)
+    {
+        News::whereIn('id', $request->vals)->update(['status' => 2]);
+    }
+
+    private function delete($request)
+    {
+        News::destroy($request->vals);
+    }
+
+    // public function rCategorySet($request)
+    // {
+    // 	RCategory::where('plugin_id', '=', $request->id)
+    // 		->where('plugin', '=', 'product')
+    // 		->delete();
+    // 	RCategory::InsertCategory($request->category, 'product', 'product', $request->id);
+    // }
+
+    // public function aCategorySet()
+    // {
+    // 	$results = Category::select('m_category.id', 'm_category.title', 'm_category.text')
+    // 		->JoinCategory()
+    // 		->JoinCategoryProduct()
+    // 		->StatusCheck()
+    // 		->where('r_category.plugin', 'product')
+    // 		->groupBy('m_category.id')
+    // 		->orderBy('m_category.id', 'asc')
+    // 		->get()
+    // 		->toArray();
+    // 	ACategory::truncate();
+    // 	ACategory::insert($results);
+    // }
+}
