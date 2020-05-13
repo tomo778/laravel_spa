@@ -20,11 +20,12 @@ import store from './store'
 // これによって<RouterView />コンポーネントなどを使うことができる
 Vue.use(VueRouter)
 
-// パスとコンポーネントのマッピング
+
 const routes = [
   {
     path: '/',
-    component: Top
+    component: Top,
+    //meta: { layout: "home", requiresGuest: true }
     // props: route => {
     //   const page = route.query.page
     //   return { page: /^[1-9][0-9]*$/.test(page) ? page * 1 : 1 }
@@ -33,130 +34,60 @@ const routes = [
   {
     path: '/admin',
     component: AdminTop,
-    beforeEnter(to, from, next) {
-      if (store.getters['auth/check']) {
-        next()
-      } else {
-        next('/')
-      }
-    }
+    meta: { requiresAuth: true }
   },
   {
     path: '/admin/staff',
     component: AdminStaff,
-    beforeEnter(to, from, next) {
-      if (store.getters['auth/check']) {
-        next()
-      } else {
-        next('/')
-      }
-    }
+    meta: { requiresAuth: true }
   },
   {
     path: '/admin/staff/edit',
     component: AdminStaffEdit,
-    beforeEnter(to, from, next) {
-      if (store.getters['auth/check']) {
-        next()
-      } else {
-        next('/')
-      }
-    }
+    meta: { requiresAuth: true }
   },
   {
     path: '/admin/staff/edit/:id',
     component: AdminStaffEdit,
     props: true,
-    beforeEnter(to, from, next) {
-      if (store.getters['auth/check']) {
-        next()
-      } else {
-        next('/')
-      }
-    }
+    meta: { requiresAuth: true }
   },
   {
     path: '/admin/news',
     component: AdminNews,
-    // props: route => {
-    //   const page = route.query.page
-    //   return { page: /^[1-9][0-9]*$/.test(page) ? page * 1 : 1 }
-    // },
-    beforeEnter(to, from, next) {
-      if (store.getters['auth/check']) {
-        next()
-      } else {
-        next('/')
-      }
-    }
+    meta: { requiresAuth: true }
   },
   {
     path: '/admin/news/edit',
     component: AdminNewsEdit,
-    beforeEnter(to, from, next) {
-      if (store.getters['auth/check']) {
-        next()
-      } else {
-        next('/')
-      }
-    }
+    meta: { requiresAuth: true }
   },
   {
     path: '/admin/news/edit/:id',
     component: AdminNewsEdit,
     props: true,
-    beforeEnter(to, from, next) {
-      if (store.getters['auth/check']) {
-        next()
-      } else {
-        next('/')
-      }
-    }
+    meta: { requiresAuth: true }
   },
   {
     path: '/admin/category',
     component: AdminCategory,
-    beforeEnter(to, from, next) {
-      if (store.getters['auth/check']) {
-        next()
-      } else {
-        next('/')
-      }
-    }
+    meta: { requiresAuth: true }
   },
   {
     path: '/admin/category/edit',
     component: AdminCategoryEdit,
-    beforeEnter(to, from, next) {
-      if (store.getters['auth/check']) {
-        next()
-      } else {
-        next('/')
-      }
-    }
+    meta: { requiresAuth: true }
   },
   {
     path: '/admin/category/edit/:id',
     component: AdminCategoryEdit,
     props: true,
-    beforeEnter(to, from, next) {
-      if (store.getters['auth/check']) {
-        next()
-      } else {
-        next('/')
-      }
-    }
+    meta: { requiresAuth: true }
   },
   {
     path: '/admin/login',
     component: Login,
-    beforeEnter(to, from, next) {
-      if (store.getters['auth/check']) {
-        next('/')
-      } else {
-        next()
-      }
-    }
+    meta: { layout: "login",　requiresGuest: true }
   },
   {
     path: '/500',
@@ -166,7 +97,8 @@ const routes = [
     path: '*',
     component: NotFound
   }
-]
+];
+
 
 // VueRouterインスタンスを作成する
 const router = new VueRouter({
@@ -176,6 +108,24 @@ const router = new VueRouter({
   },
   routes
 })
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (store.getters['auth/check']) {
+      next()
+    } else {
+      next('/')
+    }
+  } else if (to.matched.some(record => record.meta.requiresGuest)) {
+    if (store.getters['auth/check']) {
+      next('/')
+    } else {
+      next()
+    }
+  } else {
+    next();
+  }
+});
 
 // VueRouterインスタンスをエクスポートする
 // app.jsでインポートするため

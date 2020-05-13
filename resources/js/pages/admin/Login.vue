@@ -1,40 +1,38 @@
 <template>
-  <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-    <form class="form-signin" @submit.prevent="login">
-      <h1 class="h3 mb-3 font-weight-normal">ログインページ</h1>
-      <label for="inputEmail" class="sr-only">Email address</label>
-      <input
-        type="email"
-        id="inputEmail"
-        class="form-control"
-        placeholder="Email address"
-        v-model="loginForm.email"
-      />
-      <label for="inputPassword" class="sr-only">Password</label>
-      <input
-        type="password"
-        id="inputPassword"
-        class="form-control"
-        placeholder="Password"
-        v-model="loginForm.password"
-      />
-      <div v-if="loginErrors" class="errors">
-        <ul v-if="loginErrors.email">
-          <li v-for="msg in loginErrors.email" :key="msg">{{ msg }}</li>
-        </ul>
-        <ul v-if="loginErrors.password">
-          <li v-for="msg in loginErrors.password" :key="msg">{{ msg }}</li>
-        </ul>
-      </div>
-      <!-- <div class="checkbox mb-3">
+  <form class="form-signin" @submit.prevent="login">
+    <h1 class="h3 mb-3 font-weight-normal">ログイン</h1>
+    <label for="inputEmail" class="sr-only">Email address</label>
+    <input
+      type="email"
+      id="inputEmail"
+      class="form-control"
+      placeholder="Email address"
+      v-model="loginForm.email"
+    />
+    <label for="inputPassword" class="sr-only">Password</label>
+    <input
+      type="password"
+      id="inputPassword"
+      class="form-control"
+      placeholder="Password"
+      v-model="loginForm.password"
+    />
+    <div v-if="loginErrors" class="errors">
+      <ul v-if="loginErrors.email">
+        <li v-for="msg in loginErrors.email" :key="msg">{{ msg }}</li>
+      </ul>
+      <ul v-if="loginErrors.password">
+        <li v-for="msg in loginErrors.password" :key="msg">{{ msg }}</li>
+      </ul>
+    </div>
+    <!-- <div class="checkbox mb-3">
         <label>
           <input type="checkbox" value="remember-me" /> Remember me
         </label>
-      </div>-->
-      <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-      <p class="mt-5 mb-3 text-muted">&copy; 2019</p>
-    </form>
-  </main>
+    </div>-->
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+    <p class="mt-5 mb-3 text-muted">&copy; 2019</p>
+  </form>
 </template>
 
 <script>

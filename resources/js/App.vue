@@ -1,66 +1,22 @@
 <template>
-  <div>
-    <a id="skippy" class="sr-only sr-only-focusable" href="#content">
-      <div class="container">
-        <span class="skiplink-text">Skip to main content</span>
-      </div>
-    </a>
-    <Navbar />
-
-    <div class="container-fluid">
-      <div class="row">
-        <SideNav />
-        <RouterView />
-      </div>
-    </div>
-    <Message />
-  </div>
+  <component v-bind:is="layout" />
 </template>
 
 <script>
-import Navbar from "./components/Navbar.vue";
-import Footer from "./components/Footer.vue";
-import Message from "./components/Message.vue";
-import SideNav from "./components/SideNav.vue";
-
-import { NOT_FOUND, UNAUTHORIZED, INTERNAL_SERVER_ERROR } from "./util";
-import feather from "feather-icons";
+import DefaultLayout from "./layout/DefaultLayout.vue";
+import LoginLayout from "./layout/LoginLayout.vue";
 
 export default {
   components: {
-    SideNav,
-    Message,
-    Navbar,
-    Footer
+    DefaultLayout,
+    LoginLayout
   },
   computed: {
-    errorCode() {
-      return this.$store.state.error.code;
-    }
-  },
-  mounted() {
-    feather.replace();
-  },
-  watch: {
-    errorCode: {
-      async handler(val) {
-        if (val === INTERNAL_SERVER_ERROR) {
-          this.$router.push("/500");
-        } else if (val === UNAUTHORIZED) {
-          // トークンをリフレッシュ
-          await axios.get("/api/refresh-token");
-          // ストアのuserをクリア
-          this.$store.commit("auth/setUser", null);
-          // ログイン画面へ
-          this.$router.push("/login");
-        } else if (val === NOT_FOUND) {
-          this.$router.push("/not-found");
-        }
-      },
-      immediate: true
-    },
-    $route() {
-      this.$store.commit("error/setCode", null);
+    layout: {
+      cache: false,
+      get: function() {
+        return (this.$route.meta.layout || "Default") + 'Layout';
+      }
     }
   }
 };
