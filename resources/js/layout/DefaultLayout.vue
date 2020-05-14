@@ -17,10 +17,10 @@
 </template>
 
 <script>
-import Navbar from "../components/Navbar.vue";
-import Footer from "../components/Footer.vue";
-import Message from "../components/Message.vue";
-import SideNav from "../components/SideNav.vue";
+import Navbar from "../components/Admin/Navbar.vue";
+import Footer from "../components/Admin/Footer.vue";
+import Message from "../components/Admin/Message.vue";
+import SideNav from "../components/Admin/SideNav.vue";
 
 import { NOT_FOUND, UNAUTHORIZED, INTERNAL_SERVER_ERROR } from "../util";
 import feather from "feather-icons";
@@ -34,6 +34,13 @@ export default {
   },
   metaInfo: {
     link: [{ rel: "stylesheet", href: "/css/app.css" }],
+    // script: [
+    //   {
+    //     src: "/js/app.css",
+    //     async: true,
+    //     defer: true
+    //   }
+    // ],
     titleTemplate: "管理画面"
   },
   computed: {

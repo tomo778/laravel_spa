@@ -20,11 +20,8 @@ class Category extends Model
         'text',
     ];
 
-    // /**
-    //  * skillを所有するユーザを取得
-    //  */
-    // public function news()
+    // public function category_rel()
     // {
-    //     return $this->belongsToMany('App\News');
+    //     return $this->hasMany('App\CategoryRel');
     // }
 }

@@ -1,7 +1,11 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
-import Top from './pages/Top.vue'
+import Index from './pages/Index.vue'
+import Detail from './pages/Detail.vue'
+import Category from './pages/Category.vue'
+import Archive from './pages/Archive.vue'
+
 //
 import Login from './pages/admin/Login.vue'
 import AdminTop from './pages/admin/Top.vue'
@@ -24,12 +28,41 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    component: Top,
-    //meta: { layout: "home", requiresGuest: true }
-    // props: route => {
-    //   const page = route.query.page
-    //   return { page: /^[1-9][0-9]*$/.test(page) ? page * 1 : 1 }
-    // }
+    component: Index,
+    meta: { layout: "Index" },
+    props: route => {
+      const page = route.query.p
+      return { page: /^[1-9][0-9]*$/.test(page) ? page * 1 : 1 }
+    }
+  },
+  {
+    path: '/detail/:id',
+    props: true,
+    component: Detail,
+    meta: { layout: "Index" }
+  },
+  {
+    path: '/category/:id',
+    props: route => {
+      return {
+        id: route.params['id'],
+        page: route.query.p
+      }
+    },
+    component: Category,
+    meta: { layout: "Index" }
+  },
+  {
+    path: '/archive/:y/:m',
+    props: route => {
+      return {
+        y: route.params['y'],
+        m: route.params['m'],
+        page: route.query.p
+      }
+    },
+    component: Archive,
+    meta: { layout: "Index" }
   },
   {
     path: '/admin',
@@ -87,7 +120,7 @@ const routes = [
   {
     path: '/admin/login',
     component: Login,
-    meta: { layout: "login",　requiresGuest: true }
+    meta: { layout: "login", requiresGuest: true }
   },
   {
     path: '/500',

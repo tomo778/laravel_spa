@@ -90,12 +90,10 @@ import {
 } from "../../util";
 import Loading from "vue-loading-overlay";
 import "vue-loading-overlay/dist/vue-loading.css";
-import Footer from "../../components/Footer.vue";
 
 export default {
   components: {
-    Loading,
-    Footer
+    Loading
   },
   props: {
     id: {
@@ -134,6 +132,8 @@ export default {
         });
         return false;
       } else {
+        // authストアのloginアクションを呼び出す
+        await this.$store.dispatch("categorys/categorys");
         this.$store.commit("message/setContent", {
           content: MESSAGE_CREATE
         });
@@ -154,6 +154,8 @@ export default {
         });
         return false;
       } else {
+        // authストアのloginアクションを呼び出す
+        await this.$store.dispatch("categorys/categorys");
         this.$store.commit("message/setContent", {
           content: MESSAGE_UPDATE
         });

@@ -28,6 +28,7 @@
     "dependencies": {
         "feather-icons": "^4.28.0",
         "laravel-vue-pagination": "^2.3.1",
+        "moment": "^2.25.3",
         "vue-loading-overlay": "^3.3.2",
         "vue-meta": "^2.3.3"
     }

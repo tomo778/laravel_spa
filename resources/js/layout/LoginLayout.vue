@@ -14,7 +14,7 @@ export default {
   metaInfo: {
     title: "ログイン",
     //titleTemplate: "%s - Yay!",
-    link: [{ rel: "stylesheet", href: "/css/login/login.css" }],
+    link: [{ rel: "stylesheet", href: "/css/login.css" }],
   },
   watch: {
     errorCode: {

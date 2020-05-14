@@ -111,9 +111,7 @@
             <td>{{ news.title }}</td>
             <td>{{ news.text}}</td>
             <td>
-              <div v-for="news in news.add_category" :key="news.id">
-                {{news.title}}
-              </div>
+              <div v-for="news in news.add_category" :key="news.id">{{news.title}}</div>
             </td>
             <td>
               <RouterLink class="edit" :to="`/admin/news/edit/${news.id}`">更新</RouterLink>
@@ -235,6 +233,8 @@ export default {
         this.$store.commit("error/setCode", response.status);
         return false;
       }
+      // authストアのloginアクションを呼び出す
+      await this.$store.dispatch("categorys/categorys");
       //
       this.selected = "";
       this.sarch();

@@ -1,71 +1,40 @@
 <template>
-  <nav class="col-md-2 d-none d-md-block bg-light sidebar">
-    <div class="sidebar-sticky">
-      <ul class="nav flex-column">
-        <li class="nav-item">
-          <RouterLink class="nav-link" to="/admin">
-            <span data-feather="home"></span>
-            Dashboard
-          </RouterLink>
-          <hr />
+  <aside class="col-md-4 blog-sidebar">
+    <div class="p-3 mb-3 bg-light rounded">
+      <h4 class="font-italic">About</h4>
+      <p class="mb-0">
+        サイトの説明サイトの説明サイトの説明サイトの説明サイトの説明サイトの説明
+        サイトの説明サイトの説明サイトの説明サイトの説明
+        サイトの説明サイトの説明サイトの説明
+      </p>
+    </div>
+
+    <div class="p-3">
+      <h4 class="font-italic">Categorys</h4>
+      <ol class="list-unstyled mb-0">
+        <li v-for="category in categorys" :key="category.id">
+          <RouterLink :to="`/category/${category.id}`">{{category.title}}</RouterLink>
         </li>
-        <li v-for="plugin in plugins" :key="plugin.plugin" class="nav-item">
-          <a class="nav-link" href="#">
-            <span :data-feather="plugin.feather"></span>
-            {{plugin.name}}
-          </a>
-          <ul>
-            <li v-for="child in plugin.child" :key="child.plugin">
-              <RouterLink class="nav-link" :to="{ path: child.path}">{{child.name}}</RouterLink>
+      </ol>
+    </div>
+    <div class="p-3">
+      <h4 class="font-italic">Archives</h4>
+      <ul class="list-unstyled mb-0">
+        <li v-for="(archive, key) in archives" :key="archive.id">
+          <RouterLink :to="`/archive/${archive.year}/${archive.month}`">{{archive.year}}年{{archive.month}}月</RouterLink>({{archive.post_count}})
+          <!-- <ul class="list-unstyled mb-0">
+            <li v-for="(v, key) in archive" :key="v.id">
+              <RouterLink :to="`/category/${v.month}`">{{v.month}}月</RouterLink>({{v.post_count}})
             </li>
-          </ul>
-          <hr />
+          </ul> -->
         </li>
       </ul>
-
-      <!-- <ul class="nav flex-column mb-2">
-        <li class="nav-item">
-          <a class="nav-link" href="#">
-            <span data-feather="home"></span>
-            Dashboard
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">
-            <span data-feather="shopping-cart"></span>
-            Products
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">
-            <span data-feather="users"></span>
-            Customers
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">
-            <span data-feather="bar-chart-2"></span>
-            Reports
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">
-            <span data-feather="layers"></span>
-            Integrations
-          </a>
-        </li>
-      </ul>-->
     </div>
-  </nav>
+  </aside>
 </template>
 
 <script>
-import { plugins } from "../util";
 export default {
-  data() {
-    return {
-      plugins
-    };
-  }
+  props: ["categorys", "archives"]
 };
 </script>

@@ -1,37 +1,65 @@
 <template>
-  <div class="pagination">
-    <RouterLink
-      v-if="! isFirstPage"
-      :to="`/?page=${currentPage - 1}`"
-      class="button"
-    >&laquo; prev</RouterLink>
-    <RouterLink
-      v-if="! isLastPage"
-      :to="`/?page=${currentPage + 1}`"
-      class="button"
-    >next &raquo;</RouterLink>
-  </div>
+  <ul class="pagination">
+    <li class="page-item" v-if="hasPrev">
+      <RouterLink class="page-link" :to="`?p=${prev}`">{{this.prev_txt}}</RouterLink>
+    </li>
+    <li :class="getPageClass(page)" v-for="page in pages" :key="page">
+      <RouterLink class="page-link" :to="`?p=${page}`">{{page}}</RouterLink>
+    </li>
+    <li class="page-item" v-if="hasNext">
+      <RouterLink class="page-link" :to="`?p=${next}`">{{this.next_txt}}</RouterLink>
+    </li>
+  </ul>
 </template>
 
 <script>
 export default {
   props: {
-    currentPage: {
-      type: Number,
-      required: true
+    data: {}
+  },
+  data() {
+    return {
+      prev_txt: "<",
+      next_txt: ">"
+    };
+  },
+  methods: {
+    move(page) {
+      if (!this.isCurrentPage(page)) {
+        this.$emit("move-page", page);
+      }
     },
-    lastPage: {
-      type: Number,
-      required: true
+    isCurrentPage(page) {
+      return this.data.current_page == page;
+    },
+    getPageClass(page) {
+      let classes = ["page-item"];
+      if (this.isCurrentPage(page)) {
+        classes.push("active");
+      }
+      return classes;
     }
   },
   computed: {
-    isFirstPage () {
-      return this.currentPage === 1
+    prev() {
+      return this.data.current_page - 1;
     },
-    isLastPage () {
-      return this.currentPage === this.lastPage
+    next() {
+      return this.data.current_page + 1;
+    },
+    hasPrev() {
+      return this.data.prev_page_url != null;
+    },
+    hasNext() {
+      return this.data.next_page_url != null;
+    },
+    pages() {
+      let pages = [];
+      for (let i = 1; i <= this.data.last_page; i++) {
+        pages.push(i);
+      }
+      return pages;
     }
   }
-}
+};
 </script>

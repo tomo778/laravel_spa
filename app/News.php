@@ -36,4 +36,9 @@ class News extends Model
             'category_rel',
         );
     }
+
+    public function scopeStatusCheck($query)
+    {
+        return $query->where('news.status', 1);
+    }
 }

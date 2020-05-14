@@ -25,7 +25,7 @@ class AdminNews extends FormRequest
     public function rules()
     {
         return [
-            'text' => ['required', 'max:255'],
+            'text' => ['required'],
             'title' => ['required'],
             'category' => ['required'], 
         ];

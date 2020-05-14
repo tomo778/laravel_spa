@@ -14,12 +14,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/index', 'NewsController@index');
+Route::get('/category', 'NewsController@list');
+Route::get('/archive', 'NewsController@archive');
+
+Route::post('/detail', 'NewsController@detail');
+Route::post('/get/categorys', 'NewsController@getCategorys');
+Route::post('/get/archives', 'NewsController@getArchives');
+
 // 会員登録
 Route::post('/register', 'Auth\RegisterController@register')->name('register');
-
 // ログイン
 Route::post('/login', 'Auth\LoginController@login')->name('login');
-
 // ログアウト
 Route::post('/logout', 'Auth\LoginController@logout')->name('logout');
 // ログインユーザー
