@@ -26,9 +26,7 @@ class NewsController extends Controller
     // }
     public function list()
     {
-        //0.1秒遅らせる
-        usleep(100000);
-        $news = News::with('add_category')->orderBy('id', 'desc')->paginate(10);
+        $news = News::with('add_category')->orderBy('id', 'desc')->paginate(20);
         return $news;
     }
 
@@ -62,15 +60,15 @@ class NewsController extends Controller
 
     public function sarch(Request $request)
     {
-        $q = DB::table('news');
+        //$q = DB::table('news');
+        $q = News::with('add_category');
         if ($request->status) {
             $q = $q->where('status', $request->status);
         }
         if ($request->freeword) {
             $q = Common::fw_search($q, $request->freeword, ['title', 'text']);
         }
-        //usleep(100000);
-        $news = $q->orderBy('id', 'desc')->paginate(10);
+        $news = $q->orderBy('id', 'desc')->paginate(20);
 
         return $news;
     }
@@ -103,27 +101,4 @@ class NewsController extends Controller
     {
         News::destroy($request->vals);
     }
-
-    // public function rCategorySet($request)
-    // {
-    // 	RCategory::where('plugin_id', '=', $request->id)
-    // 		->where('plugin', '=', 'product')
-    // 		->delete();
-    // 	RCategory::InsertCategory($request->category, 'product', 'product', $request->id);
-    // }
-
-    // public function aCategorySet()
-    // {
-    // 	$results = Category::select('m_category.id', 'm_category.title', 'm_category.text')
-    // 		->JoinCategory()
-    // 		->JoinCategoryProduct()
-    // 		->StatusCheck()
-    // 		->where('r_category.plugin', 'product')
-    // 		->groupBy('m_category.id')
-    // 		->orderBy('m_category.id', 'asc')
-    // 		->get()
-    // 		->toArray();
-    // 	ACategory::truncate();
-    // 	ACategory::insert($results);
-    // }
 }

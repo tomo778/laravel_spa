@@ -19,16 +19,17 @@ export default {
   },
   data() {
     return {
+      link_num: 4, //偶数
       prev_txt: "<",
       next_txt: ">"
     };
   },
   methods: {
-    move(page) {
-      if (!this.isCurrentPage(page)) {
-        this.$emit("move-page", page);
-      }
-    },
+    // move(page) {
+    //   if (!this.isCurrentPage(page)) {
+    //     this.$emit("move-page", page);
+    //   }
+    // },
     isCurrentPage(page) {
       return this.data.current_page == page;
     },
@@ -54,9 +55,15 @@ export default {
       return this.data.next_page_url != null;
     },
     pages() {
-      let pages = [];
+      var pages = [];
+      var link_num = this.link_num / 2;
       for (let i = 1; i <= this.data.last_page; i++) {
-        pages.push(i);
+        if (
+          i >= this.data.current_page - link_num &&
+          i <= this.data.current_page + link_num
+        ) {
+          pages.push(i);
+        }
       }
       return pages;
     }

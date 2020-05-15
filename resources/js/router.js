@@ -88,6 +88,11 @@ const routes = [
   {
     path: '/admin/news',
     component: AdminNews,
+    props: route => {
+      return {
+        page: route.query.p
+      }
+    },
     meta: { requiresAuth: true }
   },
   {

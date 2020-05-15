@@ -1,6 +1,8 @@
 <template>
   <div class="col-md-8 blog-main">
     <h3 class="pb-3 mb-4 font-italic border-bottom">category: {{category.title}}</h3>
+    <p style="white-space: pre-wrap;" v-text="category.text"></p>
+    <hr>
     <Pagination :data="items"></Pagination>
     <NewsBlock :news_arr="news_arr" />
     <Pagination :data="items"></Pagination>

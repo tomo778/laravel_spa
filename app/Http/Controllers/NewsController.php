@@ -14,14 +14,14 @@ class NewsController extends Controller
     public function __construct()
     {
         //0.1秒遅らせる
-        usleep(150000);
+        //usleep(150000);
     }
 
     public function index()
     {
         return News::with('add_category')
             ->StatusCheck()
-            ->orderBy('id', 'desc')
+            ->orderBy('created_at', 'desc')
             ->paginate(10);
     }
 
@@ -43,8 +43,8 @@ class NewsController extends Controller
         $news = News::with('add_category')
             ->StatusCheck()
             ->whereIn('id', $ids)
-            ->orderBy('id', 'desc')
-            ->paginate(2);
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
 
         return $news;
     }
@@ -55,7 +55,7 @@ class NewsController extends Controller
             ->StatusCheck()
             ->whereYear('created_at', $request->y)
             ->whereMonth('created_at', $request->m)
-            ->orderBy('id', 'desc')
+            ->orderBy('created_at', 'desc')
             ->paginate(10);
     }
 
