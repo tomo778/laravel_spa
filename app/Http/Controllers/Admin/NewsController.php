@@ -8,9 +8,7 @@ use App\Libs\Common;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use App\Http\Requests\AdminNews;
-use Illuminate\Support\Facades\Hash;
 
 class NewsController extends Controller
 {
@@ -32,9 +30,9 @@ class NewsController extends Controller
 
     public function register(AdminNews $request)
     {
-        $q = new News;
+        $q = News::query();
         $q->fill($request->all())->save();
-    	CategoryRel::InsertRel($request->category, $q->id);
+        CategoryRel::insertRel($request->category, $q->id);
         return $q->id;
     }
 
@@ -42,8 +40,8 @@ class NewsController extends Controller
     {
         $q = News::findOrFail($request->id);
         $q->fill($request->all())->save();
-        CategoryRel::DeleteRel($request->id);
-    	CategoryRel::InsertRel($request->category, $request->id);
+        CategoryRel::deleteRel($request->id);
+        CategoryRel::insertRel($request->category, $request->id);
         return response(200);
     }
 
@@ -52,7 +50,7 @@ class NewsController extends Controller
         $news = News::with('category_rel')->find($request->id)->toArray();
         //重要
         $news["category"] = array();
-        foreach($news['category_rel'] as $k => $v) {
+        foreach ($news['category_rel'] as $k => $v) {
             $news["category"][] = $v['category_id'];
         }
         return $news;
@@ -60,7 +58,6 @@ class NewsController extends Controller
 
     public function sarch(Request $request)
     {
-        //$q = DB::table('news');
         $q = News::with('add_category');
         if ($request->status) {
             $q = $q->where('status', $request->status);

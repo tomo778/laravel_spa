@@ -6,7 +6,6 @@ use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use App\Http\Requests\UserUpdate;
 use Illuminate\Support\Facades\Hash;
 
@@ -39,15 +38,9 @@ class UserController extends Controller
         return response(200);
     }
 
-    /**
-     * 写真一覧
-     */
     public function list()
     {
-        //0.2秒遅らせる
-        usleep(200000);
         $users = User::orderBy('id', 'desc')->paginate();
-
         return $users;
     }
 

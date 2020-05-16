@@ -34,8 +34,6 @@
     </div>
     <loading
       :active.sync="isLoading"
-      :can-cancel="true"
-      :on-cancel="onCancel"
       :is-full-page="fullPage"
     ></loading>
   </main>

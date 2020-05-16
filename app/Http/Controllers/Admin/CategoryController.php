@@ -3,13 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Category;
-use App\Libs\Common;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use App\Http\Requests\AdminCategory;
-use Illuminate\Support\Facades\Hash;
+
 
 class CategoryController extends Controller
 {
@@ -23,18 +21,24 @@ class CategoryController extends Controller
     //     // 認証が必要
     //     $this->middleware('auth');
     // }
+    public function index()
+    {
+        $category = Category::orderByRaw('sort_num IS NULL ASC')
+        ->orderBy('sort_num', 'ASC')
+        ->get();
+        return $category;
+    }
 
     public function list()
     {
-        //0.1秒遅らせる
-        usleep(100000);
-        $news = Category::orderBy('id', 'desc')->paginate(10);
-        return $news;
+        $category = Category::orderBy('id', 'DESC')
+        ->paginate(10);
+        return $category;
     }
 
     public function register(AdminCategory $request)
     {
-        $q = new Category;
+        $q = Category::query();
         $q->fill($request->all())->save();
         return $q->id;
     }
@@ -46,53 +50,19 @@ class CategoryController extends Controller
         return response(200);
     }
 
-    public function detail(Request $request)
+    public function sort(Request $request)
     {
-        $user = Category::find($request->id);
-        return $user;
-    }
-
-    public function sarch(Request $request)
-    {
-        $q = DB::table('category');
-        if ($request->status) {
-            $q = $q->where('status', $request->status);
-        }
-        if ($request->freeword) {
-            $q = Common::fw_search($q, $request->freeword, ['title', 'text']);
-        }
-        //usleep(100000);
-        $news = $q->orderBy('id', 'desc')->paginate(10);
-
-        return $news;
-    }
-
-    public function selectbox(Request $request)
-    {
-        if ($request->mode == 1) {
-            $this->on($request);
-        }
-        if ($request->mode == 2) {
-            $this->off($request);
-        }
-        if ($request->mode == 9) {
-            $this->delete($request);
+        foreach ($request->toArray() as $k => $v) {
+            $q = Category::find($v['id']);
+            $q->sort_num = $v['sort_num'];
+            $q->save();
         }
         return response(200);
     }
 
-    private function on($request)
+    public function detail(Request $request)
     {
-        Category::whereIn('id', $request->vals)->update(['status' => 1]);
-    }
-
-    private function off($request)
-    {
-        Category::whereIn('id', $request->vals)->update(['status' => 2]);
-    }
-
-    private function delete($request)
-    {
-        Category::destroy($request->vals);
+        $user = Category::find($request->id);
+        return $user;
     }
 }

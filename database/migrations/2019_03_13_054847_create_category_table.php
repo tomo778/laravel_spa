@@ -17,6 +17,7 @@ class CreateCategoryTable extends Migration
             $table->increments('id');
             $table->string('title','100');
             $table->text('text');
+            $table->tinyInteger('sort_num')->nullable();
             $table->timestamps();
 
             //$table->foreign('id')->references('category_id')->on('category_rel');

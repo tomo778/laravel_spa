@@ -79,6 +79,12 @@
   </main>
 </template>
 
+<style scoped>
+.modal-header {
+  border-bottom: 1px solid #ddd;
+}
+</style>
+
 <script>
 import { mapState } from "vuex";
 import {
@@ -168,7 +174,7 @@ export default {
         this.$store.commit("error/setCode", response2.status);
         return false;
       }
-      this.category_arr = response2.data.data;
+      this.category_arr = response2.data;
 
       if (this.id === undefined) {
         this.title = "登録";

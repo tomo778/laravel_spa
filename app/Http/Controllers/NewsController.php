@@ -20,7 +20,7 @@ class NewsController extends Controller
     public function index()
     {
         return News::with('add_category')
-            ->StatusCheck()
+            ->statusCheck()
             ->orderBy('created_at', 'desc')
             ->paginate(10);
     }
@@ -34,14 +34,10 @@ class NewsController extends Controller
         //     ->orderBy('id', 'desc')
         //     ->paginate(10);
 
-        $results = CategoryRel::select('news_id')
-            ->where('category_id', $request->id)
-            ->get()->toArray();
-        foreach ($results as $k => $v) {
-            $ids[] = $v['news_id'];
-        }
+        $ids = CategoryRel::where('category_id', $request->id)
+            ->pluck('news_id');
         $news = News::with('add_category')
-            ->StatusCheck()
+            ->statusCheck()
             ->whereIn('id', $ids)
             ->orderBy('created_at', 'desc')
             ->paginate(10);
@@ -52,7 +48,7 @@ class NewsController extends Controller
     public function archive(Request $request)
     {
         return News::with('add_category')
-            ->StatusCheck()
+            ->statusCheck()
             ->whereYear('created_at', $request->y)
             ->whereMonth('created_at', $request->m)
             ->orderBy('created_at', 'desc')
@@ -62,7 +58,7 @@ class NewsController extends Controller
     public function detail(Request $request)
     {
         return News::with('add_category')
-            ->StatusCheck()
+            ->statusCheck()
             ->find($request->id);
     }
 
@@ -73,14 +69,15 @@ class NewsController extends Controller
             ->leftJoin('news', 'news.id', '=', 'category_rel.news_id')
             ->where('news.status', 1)
             ->groupBy('category.id')
-            ->orderBy('category.id', 'asc')
+            ->orderByRaw('category.sort_num IS NULL ASC')
+            ->orderBy('category.sort_num', 'ASC')
             ->get();
     }
 
     public function getArchives()
     {
         return News::select(DB::raw('YEAR(created_at) year, MONTH(created_at) month, MONTHNAME(created_at) month_name, COUNT(*) post_count'))
-            ->StatusCheck()
+            ->statusCheck()
             ->groupBy('year')
             ->groupBy('month')
             ->orderBy('year', 'desc')

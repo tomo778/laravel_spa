@@ -5,6 +5,8 @@ Vue.use(VueMeta, {
   // optional pluginOptions
   refreshOnceOnNavigation: true
 })
+import VModal from 'vue-js-modal'
+Vue.use(VModal)
 import router from './router'
 import store from './store'
 import App from './App.vue'

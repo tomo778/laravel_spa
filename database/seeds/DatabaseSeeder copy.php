@@ -81,7 +81,7 @@ class NewsTableSeeder extends Seeder
     {
         //DB::table('news')->truncate(); //最初に全件削除
         $now = \Carbon\Carbon::now();
-        for ($i = 1; $i < 333; $i++) {
+        for ($i = 1; $i < 3333; $i++) {
             $data = [
                 'status' => 1,
                 'title' => 'newsタイトルnewsタイトル' . $i,
@@ -94,7 +94,7 @@ class NewsTableSeeder extends Seeder
             DB::table('news')->insert($data);
         }
         $time = $now->subYear();
-        for ($i = 333; $i < 666; $i++) {
+        for ($i = 3333; $i < 6666; $i++) {
             $data = [
                 'status' => 1,
                 'title' => 'newsタイトルnewsタイトル' . $i,
@@ -108,7 +108,7 @@ class NewsTableSeeder extends Seeder
         }
         $time = $now->subYear(3);
 
-        for ($i = 666; $i < 1000; $i++) {
+        for ($i = 6666; $i < 10000; $i++) {
             $data = [
                 'status' => 1,
                 'title' => 'newsタイトルnewsタイトル' . $i,
@@ -130,7 +130,7 @@ class CategoryRelTableSeeder extends Seeder
     {
         //DB::table('category_rel')->truncate(); //最初に全件削除
         $now = \Carbon\Carbon::now();
-        for ($i = 1; $i < 333; $i++) {
+        for ($i = 1; $i < 3333; $i++) {
             $data = [
                 'news_id' => $i,
                 'category_id' => '1',
@@ -140,7 +140,7 @@ class CategoryRelTableSeeder extends Seeder
             DB::table('category_rel')->insert($data);
         }
         $now = \Carbon\Carbon::now();
-        for ($i = 333; $i < 666; $i++) {
+        for ($i = 3333; $i < 6666; $i++) {
             $data = [
                 'news_id' => $i,
                 'category_id' => '2',
@@ -150,7 +150,7 @@ class CategoryRelTableSeeder extends Seeder
             DB::table('category_rel')->insert($data);
         }
         $now = \Carbon\Carbon::now();
-        for ($i = 666; $i < 1000; $i++) {
+        for ($i = 6666; $i < 10000; $i++) {
             $data = [
                 'news_id' => $i,
                 'category_id' => '3',

@@ -7,11 +7,6 @@ use Monolog\Handler\RotatingFileHandler;
 
 class LogCustom
 {
-	/**
-	 * Register any application services.
-	 *
-	 * @return void
-	 */
 	protected $log = '';
 
 	public function __construct($name)

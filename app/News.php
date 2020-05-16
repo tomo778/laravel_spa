@@ -23,21 +23,18 @@ class News extends Model
 
     public function category_rel()
     {
-        return $this->hasMany('App\CategoryRel');
+        return $this->hasMany(CategoryRel::class);
     }
 
-    /**
-     * userのスキルを取得
-     */
     public function add_category()
     {
         return $this->belongsToMany(
-            'App\Category',
-            'category_rel',
+            Category::class,
+            CategoryRel::class,
         );
     }
 
-    public function scopeStatusCheck($query)
+    public function scopestatusCheck($query)
     {
         return $query->where('news.status', 1);
     }

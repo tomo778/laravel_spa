@@ -23,9 +23,8 @@
           type="text"
           v-model="searchForm.freeword"
           class="form-control"
-          placeholder="スペース区切りで検索できます（enterかフォーカスを外すと検索）"
+          placeholder="スペース区切りで検索できます（enterで検索）"
           required
-          @blur="sarch"
           @keydown.enter="sarch"
         />
         <br />

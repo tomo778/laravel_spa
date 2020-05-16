@@ -82,6 +82,10 @@ export const plugins = [
         name: 'カテゴリ登録・更新',
         path: '/admin/category/edit',
       },
+      {
+        name: 'カテゴリ並び替え',
+        path: '/admin/category/sort',
+      },
     ]
   }
 ]

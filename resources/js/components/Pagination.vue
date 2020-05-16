@@ -1,15 +1,19 @@
 <template>
-  <ul class="pagination">
-    <li class="page-item" v-if="hasPrev">
-      <RouterLink class="page-link" :to="`?p=${prev}`">{{this.prev_txt}}</RouterLink>
-    </li>
-    <li :class="getPageClass(page)" v-for="page in pages" :key="page">
-      <RouterLink class="page-link" :to="`?p=${page}`">{{page}}</RouterLink>
-    </li>
-    <li class="page-item" v-if="hasNext">
-      <RouterLink class="page-link" :to="`?p=${next}`">{{this.next_txt}}</RouterLink>
-    </li>
-  </ul>
+  <div>
+    <ul class="pagination">
+      <li class="page-item" v-if="hasPrev">
+        <RouterLink class="page-link" :to="`?p=${prev}`">{{this.prev_txt}}</RouterLink>
+      </li>
+      <li :class="getPageClass(page)" v-for="page in pages" :key="page">
+        <RouterLink class="page-link" :to="`?p=${page}`">{{page}}</RouterLink>
+      </li>
+      <li class="page-item" v-if="hasNext">
+        <RouterLink class="page-link" :to="`?p=${next}`">{{this.next_txt}}</RouterLink>
+      </li>
+    </ul>
+        <p>全: {{this.data.total}} 件 / {{this.data.from}} ~ {{this.data.to}}表示中</p>
+
+  </div>
 </template>
 
 <script>

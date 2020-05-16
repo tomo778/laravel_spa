@@ -53,7 +53,7 @@ export default {
     async list() {
       this.isLoading = true;
       const response = await axios.post(
-        `/api/admin/category`
+        `/api/admin/category/list`
       );
       if (response.status !== OK) {
         this.$store.commit("error/setCode", response.status);

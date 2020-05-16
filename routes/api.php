@@ -47,12 +47,12 @@ Route::post('/admin/news/update', 'Admin\NewsController@update');
 Route::post('/admin/news/selectbox', 'Admin\NewsController@selectbox');
 Route::post('/admin/news/sarch', 'Admin\NewsController@sarch');
 
-Route::post('/admin/category', 'Admin\CategoryController@list');
+Route::post('/admin/category', 'Admin\CategoryController@index');
+Route::post('/admin/category/list', 'Admin\CategoryController@list');
 Route::post('/admin/category/register', 'Admin\CategoryController@register');
 Route::post('/admin/category/detail/{id}', 'Admin\CategoryController@detail');
 Route::post('/admin/category/update', 'Admin\CategoryController@update');
-Route::post('/admin/category/selectbox', 'Admin\CategoryController@selectbox');
-Route::post('/admin/category/sarch', 'Admin\CategoryController@sarch');
+Route::post('/admin/category/sort', 'Admin\CategoryController@sort');
 
 // Route::middleware('auth:api')->get('/user', function (Request $request) {
 //     return $request->user();

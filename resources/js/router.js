@@ -1,11 +1,10 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-
+//
 import Index from './pages/Index.vue'
 import Detail from './pages/Detail.vue'
 import Category from './pages/Category.vue'
 import Archive from './pages/Archive.vue'
-
 //
 import Login from './pages/admin/Login.vue'
 import AdminTop from './pages/admin/Top.vue'
@@ -15,6 +14,7 @@ import AdminNews from './pages/admin/News.vue'
 import AdminNewsEdit from './pages/admin/NewsEdit.vue'
 import AdminCategory from './pages/admin/Category.vue'
 import AdminCategoryEdit from './pages/admin/CategoryEdit.vue'
+import AdminCategorySort from './pages/admin/CategorySort.vue'
 //
 import SystemError from './pages/errors/System.vue'
 import NotFound from './pages/errors/NotFound.vue'
@@ -114,6 +114,11 @@ const routes = [
   {
     path: '/admin/category/edit',
     component: AdminCategoryEdit,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/admin/category/sort',
+    component: AdminCategorySort,
     meta: { requiresAuth: true }
   },
   {

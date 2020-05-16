@@ -19,9 +19,4 @@ class Category extends Model
         'title',
         'text',
     ];
-
-    // public function category_rel()
-    // {
-    //     return $this->hasMany('App\CategoryRel');
-    // }
 }
