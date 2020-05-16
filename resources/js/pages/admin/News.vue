@@ -15,7 +15,6 @@
         </button>
       </div>
     </div>
-    <!-- <form class="needs-validation" novalidate> -->
     <div class="form-row">
       <div class="col-md-7 mb-3">
         <label for="validationTooltip03">フリーワード検索</label>

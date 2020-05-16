@@ -24,14 +24,14 @@ class UserController extends Controller
 
     public function update(UserUpdate $request)
     {
-		$array = [
+        $array = [
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password)
-		];
-		if (empty($request->password)) {
-			unset($array['password']);
-		}
+        ];
+        if (empty($request->password)) {
+            unset($array['password']);
+        }
         User::where('id', $request->id)
             ->update($array);
 

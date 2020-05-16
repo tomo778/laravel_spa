@@ -13,19 +13,6 @@
         <input type="hidden" name="id" v-model="registerForm.id" />
       </div>
       <div class="form-group row">
-        <label for="inputEmail" class="col-sm-2 col-form-label">ロール</label>
-        <div class="col-sm-10">
-          <div v-for="(item, index) in status" :key="index">
-            <label>
-              <input type="radio" v-bind:value="index" v-model="registerForm.status" />
-              {{item}}
-            </label>
-            <br>
-          </div>
-        </div>
-      </div>
-
-      <div class="form-group row">
         <label for="inputEmail" class="col-sm-2 col-form-label">タイトル</label>
         <div class="col-sm-10">
           <input type="text" class="form-control" name="title" v-model="registerForm.title" />
@@ -149,7 +136,9 @@ export default {
         return;
       }
 
-      const response = await axios.post(`/api/admin/category/detail/${this.id}`);
+      const response = await axios.post(
+        `/api/admin/category/detail/${this.id}`
+      );
       if (response.status !== OK) {
         this.$store.commit("error/setCode", response.status);
         return false;

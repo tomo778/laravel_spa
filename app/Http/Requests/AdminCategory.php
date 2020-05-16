@@ -27,7 +27,7 @@ class AdminCategory extends FormRequest
         return [
             'text' => ['required', 'max:255'],
             'title' => ['required'],
-            //'status' => ['required'], 
+            //'status' => ['required'],
         ];
     }
 }

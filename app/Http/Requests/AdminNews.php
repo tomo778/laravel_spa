@@ -27,7 +27,7 @@ class AdminNews extends FormRequest
         return [
             'text' => ['required'],
             'title' => ['required'],
-            'category' => ['required'], 
+            'category' => ['required'],
         ];
     }
 }

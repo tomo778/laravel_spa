@@ -3597,19 +3597,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
@@ -4146,7 +4133,6 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-//
 //
 //
 //
@@ -35460,52 +35446,6 @@ var render = function() {
               })
             ])
           : _vm._e(),
-        _vm._v(" "),
-        _c("div", { staticClass: "form-group row" }, [
-          _c(
-            "label",
-            {
-              staticClass: "col-sm-2 col-form-label",
-              attrs: { for: "inputEmail" }
-            },
-            [_vm._v("ロール")]
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "col-sm-10" },
-            _vm._l(_vm.status, function(item, index) {
-              return _c("div", { key: index }, [
-                _c("label", [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.registerForm.status,
-                        expression: "registerForm.status"
-                      }
-                    ],
-                    attrs: { type: "radio" },
-                    domProps: {
-                      value: index,
-                      checked: _vm._q(_vm.registerForm.status, index)
-                    },
-                    on: {
-                      change: function($event) {
-                        return _vm.$set(_vm.registerForm, "status", index)
-                      }
-                    }
-                  }),
-                  _vm._v("\n            " + _vm._s(item) + "\n          ")
-                ]),
-                _vm._v(" "),
-                _c("br")
-              ])
-            }),
-            0
-          )
-        ]),
         _vm._v(" "),
         _c("div", { staticClass: "form-group row" }, [
           _c(
