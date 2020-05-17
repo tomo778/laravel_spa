@@ -6,7 +6,7 @@ class Breadcrumbs
 {
     public static $array = array();
 
-    public static function push($text, $url = null)
+    public static function push(string $text, string $url = null)
     {
         self::$array[$url] = $text;
     }

@@ -84,17 +84,17 @@ class NewsController extends Controller
         return response(200);
     }
 
-    private function on($request)
+    private function on(Request $request)
     {
         News::whereIn('id', $request->vals)->update(['status' => 1]);
     }
 
-    private function off($request)
+    private function off(Request $request)
     {
         News::whereIn('id', $request->vals)->update(['status' => 2]);
     }
 
-    private function delete($request)
+    private function delete(Request $request)
     {
         News::destroy($request->vals);
     }

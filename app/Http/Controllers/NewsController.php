@@ -11,12 +11,6 @@ use Illuminate\Support\Facades\DB;
 
 class NewsController extends Controller
 {
-    public function __construct()
-    {
-        //0.1秒遅らせる
-        //usleep(150000);
-    }
-
     public function index()
     {
         return News::with('add_category')
@@ -27,13 +21,6 @@ class NewsController extends Controller
 
     public function list(Request $request)
     {
-        // $news = News::with('add_category')
-        //     ->whereHas('add_category', function ($query) use ($request) {
-        //         $query->where('category.id', $request->id);
-        //     })
-        //     ->orderBy('id', 'desc')
-        //     ->paginate(10);
-
         $ids = CategoryRel::where('category_id', $request->id)
             ->pluck('news_id');
         $news = News::with('add_category')
@@ -83,8 +70,5 @@ class NewsController extends Controller
             ->orderBy('year', 'desc')
             ->orderBy('month', 'desc')
             ->get()->toArray();
-        // foreach ($arr as $k => $v) {
-        //     $archives[$v['year']][] = $v;
-        // }
     }
 }
