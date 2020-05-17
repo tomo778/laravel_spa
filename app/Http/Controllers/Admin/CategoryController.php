@@ -10,16 +10,12 @@ use App\Http\Requests\AdminCategory;
 
 class CategoryController extends Controller
 {
-    // public function __construct()
-    // {
-    //     // 認証が必要
-    //     $this->middleware('auth')->except(['index', 'download', 'show']);
-    // }
-    // public function __construct()
-    // {
-    //     // 認証が必要
-    //     $this->middleware('auth');
-    // }
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index()
     {
         $category = Category::orderByRaw('sort_num IS NULL ASC')

@@ -11,16 +11,10 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    // public function __construct()
-    // {
-    //     // 認証が必要
-    //     $this->middleware('auth')->except(['index', 'download', 'show']);
-    // }
-    // public function __construct()
-    // {
-    //     // 認証が必要
-    //     $this->middleware('auth');
-    // }
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
     public function update(UserUpdate $request)
     {
