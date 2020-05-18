@@ -34,7 +34,7 @@ class News extends Model
         );
     }
 
-    public function scopestatusCheck($query)
+    public function scopeStatusCheck($query)
     {
         return $query->where('news.status', 1);
     }
