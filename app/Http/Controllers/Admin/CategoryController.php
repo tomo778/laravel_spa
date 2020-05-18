@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Category;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\AdminCategory;
 
 class CategoryController extends Controller
@@ -16,22 +15,20 @@ class CategoryController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function index(): Object
     {
-        $category = Category::orderByRaw('sort_num IS NULL ASC')
+        return Category::orderByRaw('sort_num IS NULL ASC')
         ->orderBy('sort_num', 'ASC')
         ->get();
-        return $category;
     }
 
-    public function list()
+    public function list(): \Illuminate\Pagination\LengthAwarePaginator
     {
-        $category = Category::orderBy('id', 'DESC')
+        return Category::orderBy('id', 'DESC')
         ->paginate(10);
-        return $category;
     }
 
-    public function register(AdminCategory $request)
+    public function register(AdminCategory $request): Object
     {
         $q = Category::query();
         $q->fill($request->all())->save();
@@ -55,9 +52,8 @@ class CategoryController extends Controller
         return response(200);
     }
 
-    public function detail(Request $request)
+    public function detail(Request $request): Object
     {
-        $user = Category::find($request->id);
-        return $user;
+        return Category::find($request->id);
     }
 }

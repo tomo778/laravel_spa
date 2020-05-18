@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 
 class NewsController extends Controller
 {
-    public function index()
+    public function index(): \Illuminate\Pagination\LengthAwarePaginator
     {
         return News::with('add_category')
             ->statusCheck()
@@ -19,20 +19,18 @@ class NewsController extends Controller
             ->paginate(10);
     }
 
-    public function list(Request $request)
+    public function list(Request $request): \Illuminate\Pagination\LengthAwarePaginator
     {
         $ids = CategoryRel::where('category_id', $request->id)
             ->pluck('news_id');
-        $news = News::with('add_category')
+        return News::with('add_category')
             ->statusCheck()
             ->whereIn('id', $ids)
             ->orderBy('created_at', 'desc')
             ->paginate(10);
-
-        return $news;
     }
 
-    public function archive(Request $request)
+    public function archive(Request $request): \Illuminate\Pagination\LengthAwarePaginator
     {
         return News::with('add_category')
             ->statusCheck()
@@ -42,26 +40,26 @@ class NewsController extends Controller
             ->paginate(10);
     }
 
-    public function detail(Request $request)
+    public function detail(Request $request): Object
     {
         return News::with('add_category')
             ->statusCheck()
             ->find($request->id);
     }
 
-    public function getCategorys()
+    public function getCategorys(): Object
     {
         return Category::select('category.id', 'category.title', 'category.text')
             ->leftJoin('category_rel', 'category_rel.category_id', '=', 'category.id')
             ->leftJoin('news', 'news.id', '=', 'category_rel.news_id')
-            ->where('news.status', 1)
+            ->where('news.status', config('const.STATUS_ON'))
             ->groupBy('category.id')
             ->orderByRaw('category.sort_num IS NULL ASC')
             ->orderBy('category.sort_num', 'ASC')
             ->get();
     }
 
-    public function getArchives()
+    public function getArchives(): Object
     {
         return News::select(DB::raw('YEAR(created_at) year, MONTH(created_at) month, MONTHNAME(created_at) month_name, COUNT(*) post_count'))
             ->statusCheck()
@@ -69,6 +67,6 @@ class NewsController extends Controller
             ->groupBy('month')
             ->orderBy('year', 'desc')
             ->orderBy('month', 'desc')
-            ->get()->toArray();
+            ->get();
     }
 }

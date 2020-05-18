@@ -17,13 +17,12 @@ class NewsController extends Controller
         $this->middleware('auth');
     }
 
-    public function list()
+    public function list(): Object
     {
-        $news = News::with('add_category')->orderBy('id', 'desc')->paginate(20);
-        return $news;
+        return News::with('add_category')->orderBy('id', 'desc')->paginate(20);
     }
 
-    public function register(AdminNews $request)
+    public function register(AdminNews $request): Object
     {
         $q = News::query();
         $q->fill($request->all())->save();
@@ -40,18 +39,17 @@ class NewsController extends Controller
         return response(200);
     }
 
-    public function detail(Request $request)
+    public function detail(Request $request): array
     {
+        $news = array();
         $news = News::with('category_rel')->find($request->id)->toArray();
-        //重要
-        $news["category"] = array();
         foreach ($news['category_rel'] as $k => $v) {
             $news["category"][] = $v['category_id'];
         }
         return $news;
     }
 
-    public function sarch(Request $request)
+    public function sarch(Request $request): Object
     {
         $q = News::with('add_category');
         if ($request->status) {
@@ -60,36 +58,34 @@ class NewsController extends Controller
         if ($request->freeword) {
             $q = Common::fw_search($q, $request->freeword, ['title', 'text']);
         }
-        $news = $q->orderBy('id', 'desc')->paginate(20);
-
-        return $news;
+        return $q->orderBy('id', 'desc')->paginate(20);
     }
 
     public function selectbox(Request $request)
     {
-        if ($request->mode == 1) {
+        if ($request->mode == config('const.STATUS_ON')) {
             $this->on($request);
         }
-        if ($request->mode == 2) {
+        if ($request->mode == config('const.STATUS_OFF')) {
             $this->off($request);
         }
-        if ($request->mode == 9) {
+        if ($request->mode == config('const.STATUS_DELETE')) {
             $this->delete($request);
         }
         return response(200);
     }
 
-    private function on(Request $request)
+    private function on(Request $request): void
     {
-        News::whereIn('id', $request->vals)->update(['status' => 1]);
+        News::whereIn('id', $request->vals)->update(['status' => config('const.STATUS_ON')]);
     }
 
-    private function off(Request $request)
+    private function off(Request $request): void
     {
-        News::whereIn('id', $request->vals)->update(['status' => 2]);
+        News::whereIn('id', $request->vals)->update(['status' => config('const.STATUS_OFF')]);
     }
 
-    private function delete(Request $request)
+    private function delete(Request $request): void
     {
         News::destroy($request->vals);
     }

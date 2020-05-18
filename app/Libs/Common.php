@@ -12,7 +12,7 @@ class Common
      * @param array 検索対象カラム
      * @return Object $query
      */
-    public static function fw_search(Object $query, string $s, array $tmp2)
+    public static function fw_search(Object $query, string $s, array $tmp2): Object
     {
         $tmp = array();
         $tmp = mb_convert_kana($s, "s", "UTF-8");

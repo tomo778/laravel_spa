@@ -36,6 +36,6 @@ class News extends Model
 
     public function scopeStatusCheck($query)
     {
-        return $query->where('news.status', 1);
+        return $query->where('news.status', config('const.STATUS_ON'));
     }
 }

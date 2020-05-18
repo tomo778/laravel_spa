@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\UserUpdate;
 use Illuminate\Support\Facades\Hash;
+use PhpParser\Node\Expr\Cast\Object_;
 
 class UserController extends Controller
 {
@@ -32,15 +33,13 @@ class UserController extends Controller
         return response(200);
     }
 
-    public function list()
+    public function list(): \Illuminate\Pagination\LengthAwarePaginator
     {
-        $users = User::orderBy('id', 'desc')->paginate();
-        return $users;
+        return User::orderBy('id', 'desc')->paginate(10);
     }
 
-    public function detail(Request $request)
+    public function detail(Request $request): Object
     {
-        $user = User::find($request->id);
-        return $user;
+        return User::find($request->id);
     }
 }
