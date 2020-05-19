@@ -6,22 +6,17 @@
     <Pagination :data="items"></Pagination>
     <NewsBlock :news_arr="news_arr" />
     <Pagination :data="items"></Pagination>
-    <!-- /.blog-post -->
-    <loading :active.sync="isLoading" :can-cancel="true" :is-full-page="fullPage"></loading>
   </div>
 </template>
 
 <script>
-import { OK } from "../util";
-import Loading from "vue-loading-overlay";
-import "vue-loading-overlay/dist/vue-loading.css";
+import { OK,NOT_FOUND } from "../util";
 import NewsBlock from "../components/NewsBlock.vue";
 import Pagination from "../components/Pagination.vue";
 
 export default {
   components: {
     NewsBlock,
-    Loading,
     Pagination
   },
   props: {
@@ -40,8 +35,6 @@ export default {
       category: [],
       items: [],
       news_arr: [],
-      isLoading: false,
-      fullPage: true
     };
   },
   created() {
@@ -49,12 +42,15 @@ export default {
   },
   methods: {
     async list() {
-      this.isLoading = true;
       const response = await axios.get(
         `/api/category?page=${this.page}&id=${this.id}`
       );
       if (response.status !== OK) {
         this.$store.commit("error/setCode", response.status);
+        return false;
+      }
+      if (response.data.data == "") {
+        this.$store.commit("error/setCode", NOT_FOUND);
         return false;
       }
       var categorys = this.$store.getters["categorys/categorys"];
@@ -65,8 +61,6 @@ export default {
       });
       this.news_arr = response.data.data;
       this.items = response.data;
-
-      this.isLoading = false;
     }
   },
   watch: {

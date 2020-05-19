@@ -113,11 +113,11 @@ router.beforeEach((to, from, next) => {
     if (store.getters['auth/check']) {
       next()
     } else {
-      next('/')
+      next('/admin/login')
     }
   } else if (to.matched.some(record => record.meta.requiresGuest)) {
     if (store.getters['auth/check']) {
-      next('/')
+      next('/admin/login')
     } else {
       next()
     }

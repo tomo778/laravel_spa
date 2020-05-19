@@ -19,7 +19,7 @@ class NewsController extends Controller
             ->paginate(10);
     }
 
-    public function list(Request $request): \Illuminate\Pagination\LengthAwarePaginator
+    public function list(Request $request): ?\Illuminate\Pagination\LengthAwarePaginator
     {
         $ids = CategoryRel::where('category_id', $request->id)
             ->pluck('news_id');
@@ -30,7 +30,7 @@ class NewsController extends Controller
             ->paginate(10);
     }
 
-    public function archive(Request $request): \Illuminate\Pagination\LengthAwarePaginator
+    public function archive(Request $request): ?\Illuminate\Pagination\LengthAwarePaginator
     {
         return News::with('add_category')
             ->statusCheck()
@@ -40,7 +40,7 @@ class NewsController extends Controller
             ->paginate(10);
     }
 
-    public function detail(Request $request): \App\News
+    public function detail(Request $request): ?\App\News
     {
         return News::with('add_category')
             ->statusCheck()

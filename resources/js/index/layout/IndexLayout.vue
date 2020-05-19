@@ -28,6 +28,7 @@
     </main>
     <!-- /.container -->
 
+    <!-- /.blog-post -->
     <footer class="blog-footer">
       <a href="#">Back to top</a>
     </footer>
@@ -57,7 +58,7 @@ export default {
     }
   },
   metaInfo: {
-    title: "top",
+    title: "top"
     //titleTemplate: "%s - Yay!",
     //link: [{ rel: "stylesheet", href: "/css/index.css" }]
   },
@@ -81,8 +82,8 @@ export default {
   },
   watch: {
     money() {
-        console.log("変更されました");
-        this.categorys = this.$store.getters["categorys/categorys"];
+      console.log("変更されました");
+      this.categorys = this.$store.getters["categorys/categorys"];
     },
     errorCode: {
       async handler(val) {

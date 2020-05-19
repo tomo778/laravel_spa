@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { OK } from "../util";
+import { OK, NOT_FOUND } from "../util";
 import Loading from "vue-loading-overlay";
 import "vue-loading-overlay/dist/vue-loading.css";
 import moment from "moment";
@@ -49,6 +49,10 @@ export default {
       const response = await axios.post(`/api/detail?id=${this.id}`);
       if (response.status !== OK) {
         this.$store.commit("error/setCode", response.status);
+        return false;
+      }
+      if (response.data == "") {
+        this.$store.commit("error/setCode", NOT_FOUND);
         return false;
       }
       this.detail = response.data;

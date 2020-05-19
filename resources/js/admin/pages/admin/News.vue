@@ -127,7 +127,7 @@
         </table>
       </div>
       <Pagination :data="items"></Pagination>
-      <loading :active.sync="isLoading" :can-cancel="true" :is-full-page="fullPage"></loading>
+      <Loading v-show="loading"></Loading>
     </div>
   </main>
 </template>
@@ -136,8 +136,7 @@
 <script>
 import { OK, STATUS, MESSAGE_UPDATE } from "../../util";
 import Pagination from "../../components/Admin/Pagination.vue";
-import Loading from "vue-loading-overlay";
-import "vue-loading-overlay/dist/vue-loading.css";
+import Loading from "../../components/Loading.vue";
 
 export default {
   components: {
@@ -163,7 +162,7 @@ export default {
       news_arr: [],
       currentPage: 0,
       lastPage: 0,
-      isLoading: false,
+      loading: false,
       fullPage: true,
       searchForm: {
         status: "0",
@@ -177,7 +176,7 @@ export default {
   // },
   methods: {
     async init() {
-      this.isLoading = true;
+      this.loading = true;
       const response = await axios.post(
         `/api/admin/news/sarch?page=${this.page}`,
         this.searchForm
@@ -188,10 +187,10 @@ export default {
       }
       this.items = response.data;
       this.news_arr = response.data.data;
-      this.isLoading = false;
+      this.loading = false;
     },
     async sarch() {
-      this.isLoading = true;
+      this.loading = true;
       const response = await axios.post(
         `/api/admin/news/sarch?page=1`,
         this.searchForm
@@ -202,7 +201,7 @@ export default {
       }
       this.items = response.data;
       this.news_arr = response.data.data;
-      this.isLoading = false;
+      this.loading = false;
       this.$router.push("/admin/news");
     },
     selectAllCats() {

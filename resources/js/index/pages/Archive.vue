@@ -4,22 +4,17 @@
     <Pagination :data="items"></Pagination>
     <NewsBlock :news_arr="news_arr" />
     <Pagination :data="items"></Pagination>
-    <!-- /.blog-post -->
-    <loading :active.sync="isLoading" :can-cancel="true" :is-full-page="fullPage"></loading>
   </div>
 </template>
 
 <script>
-import { OK } from "../util";
+import { OK,NOT_FOUND } from "../util";
 import NewsBlock from "../components/NewsBlock.vue";
 import Pagination from "../components/Pagination.vue";
-import Loading from "vue-loading-overlay";
-import "vue-loading-overlay/dist/vue-loading.css";
 
 export default {
   components: {
     NewsBlock,
-    Loading,
     Pagination
   },
   props: {
@@ -41,8 +36,6 @@ export default {
     return {
       news_arr: [],
       items: [],
-      isLoading: false,
-      fullPage: true
     };
   },
   created() {
@@ -50,16 +43,17 @@ export default {
   },
   methods: {
     async list() {
-      this.isLoading = true;
       const response = await axios.get(`/api/archive?page=${this.page}&y=${this.y}&m=${this.m}`);
       if (response.status !== OK) {
         this.$store.commit("error/setCode", response.status);
         return false;
       }
+      if (response.data.data == "") {
+        this.$store.commit("error/setCode", NOT_FOUND);
+        return false;
+      }
       this.news_arr = response.data.data;
       this.items = response.data;
-
-      this.isLoading = false;
     }
   },
   watch: {

@@ -60,7 +60,8 @@ const routes = [
   },
   {
     path: '*',
-    component: NotFound
+    component: NotFound,
+    meta: { layout: "Index" }
   }
 ];
 
@@ -73,24 +74,6 @@ const router = new VueRouter({
   },
   routes
 })
-
-router.beforeEach((to, from, next) => {
-  if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (store.getters['auth/check']) {
-      next()
-    } else {
-      next('/')
-    }
-  } else if (to.matched.some(record => record.meta.requiresGuest)) {
-    if (store.getters['auth/check']) {
-      next('/')
-    } else {
-      next()
-    }
-  } else {
-    next();
-  }
-});
 
 // VueRouterインスタンスをエクスポートする
 // app.jsでインポートするため
