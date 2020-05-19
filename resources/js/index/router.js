@@ -6,16 +6,6 @@ import Detail from './pages/Detail.vue'
 import Category from './pages/Category.vue'
 import Archive from './pages/Archive.vue'
 //
-import Login from './pages/admin/Login.vue'
-import AdminTop from './pages/admin/Top.vue'
-import AdminStaff from './pages/admin/Staff.vue'
-import AdminStaffEdit from './pages/admin/StaffEdit.vue'
-import AdminNews from './pages/admin/News.vue'
-import AdminNewsEdit from './pages/admin/NewsEdit.vue'
-import AdminCategory from './pages/admin/Category.vue'
-import AdminCategoryEdit from './pages/admin/CategoryEdit.vue'
-import AdminCategorySort from './pages/admin/CategorySort.vue'
-//
 import SystemError from './pages/errors/System.vue'
 import NotFound from './pages/errors/NotFound.vue'
 import store from './store'
@@ -63,74 +53,6 @@ const routes = [
     },
     component: Archive,
     meta: { layout: "Index" }
-  },
-  {
-    path: '/admin',
-    component: AdminTop,
-    meta: { requiresAuth: true }
-  },
-  {
-    path: '/admin/staff',
-    component: AdminStaff,
-    meta: { requiresAuth: true }
-  },
-  {
-    path: '/admin/staff/edit',
-    component: AdminStaffEdit,
-    meta: { requiresAuth: true }
-  },
-  {
-    path: '/admin/staff/edit/:id',
-    component: AdminStaffEdit,
-    props: true,
-    meta: { requiresAuth: true }
-  },
-  {
-    path: '/admin/news',
-    component: AdminNews,
-    props: route => {
-      return {
-        page: route.query.p
-      }
-    },
-    meta: { requiresAuth: true }
-  },
-  {
-    path: '/admin/news/edit',
-    component: AdminNewsEdit,
-    meta: { requiresAuth: true }
-  },
-  {
-    path: '/admin/news/edit/:id',
-    component: AdminNewsEdit,
-    props: true,
-    meta: { requiresAuth: true }
-  },
-  {
-    path: '/admin/category',
-    component: AdminCategory,
-    meta: { requiresAuth: true }
-  },
-  {
-    path: '/admin/category/edit',
-    component: AdminCategoryEdit,
-    meta: { requiresAuth: true }
-  },
-  {
-    path: '/admin/category/sort',
-    component: AdminCategorySort,
-    meta: { requiresAuth: true }
-  },
-  {
-    path: '/admin/category/edit/:id',
-    component: AdminCategoryEdit,
-    props: true,
-    meta: { requiresAuth: true }
-  },
-  {
-    path: '/admin/login',
-    component: Login,
-    meta: { layout: "login", requiresGuest: true }
   },
   {
     path: '/500',

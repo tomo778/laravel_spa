@@ -23,7 +23,7 @@ class NewsController extends Controller
 
     public function register(AdminNews $request): int
     {
-        $q = News::query();
+        $q = News::create();
         $q->fill($request->all())->save();
         CategoryRel::insertRel($request->category, $q->id);
         return $q->id;

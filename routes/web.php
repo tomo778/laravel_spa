@@ -17,12 +17,12 @@ use Illuminate\Support\Facades\Route;
 //     return view('login');
 // });
 
-// Route::get('/admin{any}', function () {
-//     return view('admin');
-// })->where('any', '.*');
+Route::get('/admin{any}', function () {
+    return view('admin');
+})->where('any', '.*');
 
 Route::get('/{any}', function () {
-    return view('admin');
+    return view('index');
 })->where('any', '.*');
 
 //Route::get('/{any?}', fn () => view('index'))->where('any', '.+');

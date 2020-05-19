@@ -38,7 +38,7 @@ class UserController extends Controller
         return User::orderBy('id', 'desc')->paginate(10);
     }
 
-    public function detail(Request $request): Object
+    public function detail(Request $request): \App\User
     {
         return User::find($request->id);
     }

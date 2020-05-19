@@ -30,7 +30,7 @@ class CategoryController extends Controller
 
     public function register(AdminCategory $request): int
     {
-        $q = Category::query();
+        $q = Category::create();
         $q->fill($request->all())->save();
         return $q->id;
     }
@@ -52,7 +52,7 @@ class CategoryController extends Controller
         return response(200);
     }
 
-    public function detail(Request $request): \Illuminate\Database\Eloquent\Collection
+    public function detail(Request $request): \App\Category
     {
         return Category::find($request->id);
     }

@@ -59,7 +59,7 @@ export default {
   metaInfo: {
     title: "top",
     //titleTemplate: "%s - Yay!",
-    link: [{ rel: "stylesheet", href: "/css/index.css" }]
+    //link: [{ rel: "stylesheet", href: "/css/index.css" }]
   },
   methods: {
     async init() {
