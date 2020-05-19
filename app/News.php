@@ -21,12 +21,12 @@ class News extends Model
         'text',
     ];
 
-    public function category_rel()
+    public function category_rel(): \Illuminate\Database\Eloquent\Relations\hasMany
     {
         return $this->hasMany(CategoryRel::class);
     }
 
-    public function add_category()
+    public function add_category(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(
             Category::class,
@@ -34,7 +34,7 @@ class News extends Model
         );
     }
 
-    public function scopeStatusCheck($query)
+    public function scopeStatusCheck(Object $query): \Illuminate\Database\Eloquent\Builder
     {
         return $query->where('news.status', config('const.STATUS_ON'));
     }

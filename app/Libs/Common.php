@@ -10,9 +10,9 @@ class Common
      * @param Object $query
      * @param string 検索文字列
      * @param array 検索対象カラム
-     * @return Object $query
+     * @return \Illuminate\Database\Eloquent\Builder $query
      */
-    public static function fw_search(Object $query, string $s, array $tmp2): Object
+    public static function fw_search(Object $query, string $s, array $tmp2): \Illuminate\Database\Eloquent\Builder
     {
         $tmp = array();
         $tmp = mb_convert_kana($s, "s", "UTF-8");

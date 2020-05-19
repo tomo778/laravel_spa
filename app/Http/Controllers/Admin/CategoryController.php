@@ -15,7 +15,7 @@ class CategoryController extends Controller
         $this->middleware('auth');
     }
 
-    public function index(): Object
+    public function index(): \Illuminate\Database\Eloquent\Collection
     {
         return Category::orderByRaw('sort_num IS NULL ASC')
         ->orderBy('sort_num', 'ASC')
@@ -28,21 +28,21 @@ class CategoryController extends Controller
         ->paginate(10);
     }
 
-    public function register(AdminCategory $request): Object
+    public function register(AdminCategory $request): int
     {
         $q = Category::query();
         $q->fill($request->all())->save();
         return $q->id;
     }
 
-    public function update(AdminCategory $request)
+    public function update(AdminCategory $request): \Illuminate\Http\Response
     {
         $q = Category::findOrFail($request->id);
         $q->fill($request->all())->save();
         return response(200);
     }
 
-    public function sort(Request $request)
+    public function sort(Request $request): \Illuminate\Http\Response
     {
         foreach ($request->toArray() as $k => $v) {
             $q = Category::find($v['id']);
@@ -52,7 +52,7 @@ class CategoryController extends Controller
         return response(200);
     }
 
-    public function detail(Request $request): Object
+    public function detail(Request $request): \Illuminate\Database\Eloquent\Collection
     {
         return Category::find($request->id);
     }

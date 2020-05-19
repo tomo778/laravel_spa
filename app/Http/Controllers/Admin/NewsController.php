@@ -7,7 +7,6 @@ use App\CategoryRel;
 use App\Libs\Common;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\AdminNews;
 
 class NewsController extends Controller
@@ -17,12 +16,12 @@ class NewsController extends Controller
         $this->middleware('auth');
     }
 
-    public function list(): Object
+    public function list(): \Illuminate\Pagination\LengthAwarePaginator
     {
         return News::with('add_category')->orderBy('id', 'desc')->paginate(20);
     }
 
-    public function register(AdminNews $request): Object
+    public function register(AdminNews $request): int
     {
         $q = News::query();
         $q->fill($request->all())->save();
@@ -30,7 +29,7 @@ class NewsController extends Controller
         return $q->id;
     }
 
-    public function update(AdminNews $request)
+    public function update(AdminNews $request): \Illuminate\Http\Response
     {
         $q = News::findOrFail($request->id);
         $q->fill($request->all())->save();
@@ -49,7 +48,7 @@ class NewsController extends Controller
         return $news;
     }
 
-    public function sarch(Request $request): Object
+    public function sarch(Request $request): \Illuminate\Pagination\LengthAwarePaginator
     {
         $q = News::with('add_category');
         if ($request->status) {
@@ -61,7 +60,7 @@ class NewsController extends Controller
         return $q->orderBy('id', 'desc')->paginate(20);
     }
 
-    public function selectbox(Request $request)
+    public function selectbox(Request $request): \Illuminate\Http\Response
     {
         if ($request->mode == config('const.STATUS_ON')) {
             $this->on($request);

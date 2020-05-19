@@ -20,12 +20,12 @@ class CategoryRel extends Model
         'category_id',
     ];
 
-    public function scopeDeleteRel($query, $id)
+    public function scopeDeleteRel(Object $query, int $id): void
     {
         $query->where('news_id', '=', $id)->delete();
     }
 
-    public function scopeInsertRel($query, $categorys, $last_id)
+    public function scopeInsertRel(Object $query, array $categorys, int $last_id): \Illuminate\Database\Eloquent\Builder
     {
         foreach ($categorys as $k => $v) {
             $tmp['news_id'] = $last_id;

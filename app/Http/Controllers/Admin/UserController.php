@@ -17,7 +17,7 @@ class UserController extends Controller
         $this->middleware('auth');
     }
 
-    public function update(UserUpdate $request)
+    public function update(UserUpdate $request): \Illuminate\Http\Response
     {
         $array = [
             'name' => $request->name,

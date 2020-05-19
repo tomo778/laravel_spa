@@ -40,14 +40,14 @@ class NewsController extends Controller
             ->paginate(10);
     }
 
-    public function detail(Request $request): Object
+    public function detail(Request $request): \App\News
     {
         return News::with('add_category')
             ->statusCheck()
             ->find($request->id);
     }
 
-    public function getCategorys(): Object
+    public function getCategorys(): \Illuminate\Database\Eloquent\Collection
     {
         return Category::select('category.id', 'category.title', 'category.text')
             ->leftJoin('category_rel', 'category_rel.category_id', '=', 'category.id')
@@ -59,7 +59,7 @@ class NewsController extends Controller
             ->get();
     }
 
-    public function getArchives(): Object
+    public function getArchives(): \Illuminate\Database\Eloquent\Collection
     {
         return News::select(DB::raw('YEAR(created_at) year, MONTH(created_at) month, MONTHNAME(created_at) month_name, COUNT(*) post_count'))
             ->statusCheck()
