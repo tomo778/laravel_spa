@@ -3,6 +3,8 @@ import Vuex from 'vuex'
 
 import auth from './auth'
 import categorys from './categorys'
+import config from './config'
+import loading from './loading'
 import error from './error'
 import message from './message'
 
@@ -12,6 +14,8 @@ const store = new Vuex.Store({
   modules: {
     auth,
     categorys,
+    config,
+    loading,
     error,
     message
   }

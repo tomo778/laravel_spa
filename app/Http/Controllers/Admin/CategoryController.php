@@ -28,6 +28,11 @@ class CategoryController extends Controller
         ->paginate(10);
     }
 
+    public function validation(AdminCategory $request): bool
+    {
+        return true;
+    }
+
     public function register(AdminCategory $request): int
     {
         $q = Category::create();

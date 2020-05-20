@@ -60,7 +60,7 @@
 </template>
 
 <script>
-import { plugins } from "../../util";
+import { plugins } from "../util";
 export default {
   data() {
     return {

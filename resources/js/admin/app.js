@@ -6,13 +6,14 @@ Vue.use(VueMeta, {
   refreshOnceOnNavigation: true
 })
 import VModal from 'vue-js-modal'
-Vue.use(VModal)
+Vue.use(VModal, { dialog: true })
 import router from './router'
 import store from './store'
 import App from './App.vue'
 
 const createApp = async () => {
   await store.dispatch('auth/currentUser')
+  await store.dispatch('config/config')
 
   new Vue({
     el: '#app',

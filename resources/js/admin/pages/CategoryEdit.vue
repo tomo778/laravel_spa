@@ -38,35 +38,25 @@
       <footer class="fixed-bottom bg-white p-2 text-center">
         <button
           v-if="!this.id"
-          @click.prevent="register"
+          @click.prevent="validation('register')"
           class="btn btn-primary edit_btn"
         >{{this.title}}する</button>
         <button
           v-if="this.id"
-          @click.prevent="update"
+          @click.prevent="validation('update')"
           class="btn btn-primary edit_btn"
         >{{this.title}}する</button>
       </footer>
     </form>
+    <v-dialog />
   </main>
 </template>
 
 <script>
 import { mapState } from "vuex";
-import {
-  MESSAGE_ERR,
-  MESSAGE_CREATE,
-  MESSAGE_UPDATE,
-  OK,
-  STATUS
-} from "../../util";
-import Loading from "vue-loading-overlay";
-import "vue-loading-overlay/dist/vue-loading.css";
+import { MESSAGE_ERR, MESSAGE_CREATE, MESSAGE_UPDATE, OK } from "../util";
 
 export default {
-  components: {
-    Loading
-  },
   props: {
     id: {
       type: String,
@@ -76,10 +66,7 @@ export default {
   data() {
     return {
       title: "",
-      isLoading: false,
-      fullPage: true,
       registerErrors: [],
-      status: STATUS,
       registerForm: {
         id: "",
         title: "",
@@ -89,56 +76,91 @@ export default {
     };
   },
   methods: {
+    modal(mode) {
+      this.$modal.show("dialog", {
+        title: "確認!",
+        text: "本当に宜しいでしょうか？",
+        buttons: [
+          {
+            title: "OK",
+            handler: () => {
+              if (mode == "register") {
+                this.register();
+              }
+              if (mode == "update") {
+                this.update();
+              }
+            }
+          },
+          {
+            title: "Close"
+          }
+        ]
+      });
+    },
+    async validation(mode) {
+      this.$store.commit("loading/setLoading", true);
+      const response = await axios.post(
+        `/api/admin/category/validation`,
+        this.registerForm
+      );
+      this.$store.commit("loading/setLoading", false);
+      if (response.status !== OK) {
+        this.registerErrors = response.data.errors;
+        this.$store.commit("error/setCode", response.status);
+        this.$store.commit("message/setContent", {
+          content: MESSAGE_ERR
+        });
+        return false;
+      }
+      this.clearError();
+      this.modal(mode);
+    },
     async register() {
+      this.$modal.hide("dialog");
+      this.$store.commit("loading/setLoading", true);
       const response = await axios.post(
         `/api/admin/category/register`,
         this.registerForm
       );
       if (response.status !== OK) {
-        this.registerErrors = response.data.errors;
         this.$store.commit("error/setCode", response.status);
-        this.$store.commit("message/setContent", {
-          content: MESSAGE_ERR
-        });
         return false;
-      } else {
-        this.$store.commit("message/setContent", {
-          content: MESSAGE_CREATE
-        });
-        this.$router.push(`/admin/category/edit/${response.data}`);
       }
+      this.$store.commit("message/setContent", {
+        content: MESSAGE_CREATE
+      });
+      this.$router.push(`/admin/category/edit/${response.data}`);
     },
     async update() {
+      this.$modal.hide("dialog");
+      this.$store.commit("loading/setLoading", true);
       const response = await axios.post(
         `/api/admin/category/update`,
         this.registerForm
       );
-
+      this.$store.commit("loading/setLoading", false);
       if (response.status !== OK) {
-        this.registerErrors = response.data.errors;
         this.$store.commit("error/setCode", response.status);
-        this.$store.commit("message/setContent", {
-          content: MESSAGE_ERR
-        });
         return false;
-      } else {
-        this.$store.commit("message/setContent", {
-          content: MESSAGE_UPDATE
-        });
-        this.clearError();
       }
+      this.$store.commit("message/setContent", {
+        content: MESSAGE_UPDATE
+      });
     },
     async init() {
+      this.clearError();
       if (this.id === undefined) {
         this.title = "登録";
-        this.registerForm.title = null;
-        this.registerForm.text = null;
-        return;
+        this.registerForm = [];
+        return false;
       }
-
+      this.$store.commit("loading/setLoading", true);
       const response = await axios.post(
         `/api/admin/category/detail/${this.id}`
       );
+      this.$store.commit("loading/setLoading", false);
+
       if (response.status !== OK) {
         this.$store.commit("error/setCode", response.status);
         return false;
@@ -148,17 +170,15 @@ export default {
       this.registerForm = response.data;
     },
     clearError() {
-      this.$store.commit("auth/setRegisterErrorMessages", null);
+      this.registerErrors = [];
     }
   },
   created() {
-    this.clearError();
     this.init();
   },
   watch: {
     $route: {
       async handler() {
-        this.clearError();
         this.init();
       },
       immediate: true

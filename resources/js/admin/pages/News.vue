@@ -43,7 +43,7 @@
             <label class="custom-control-label" for="all">すべて</label>
           </div>
         </div>
-        <div v-for="(item, index) in status" :key="index">
+        <div v-for="(item, index) in config.array_status" :key="index">
           <div class="custom-control custom-radio">
             <input
               type="radio"
@@ -71,10 +71,9 @@
           <label for="inputState">チェックボックス操作</label>
           <select v-model="selected" @change="selectbox" id="inputState" class="form-control">
             <option value></option>
-            <option value="1">公開</option>
-            <option value="2">非公開</option>
+            <option v-for="(item, index) in config.array_status" :key="index" v-bind:value="index">{{item}}にする</option>
             <option disabled>-----------</option>
-            <option value="9">削除</option>
+            <option value="9">削除する</option>
           </select>
         </div>
         <div class="form-group col-md-4"></div>
@@ -97,7 +96,7 @@
               <th>タイトル</th>
               <th>本文</th>
               <th>カテゴリ</th>
-              <th width="50">更新</th>
+              <th width="50"></th>
             </tr>
           </thead>
           <tbody v-for="news in news_arr" :key="news.id">
@@ -108,39 +107,36 @@
               </th>
               <td>{{ news.id }}</td>
               <td>
-                <span v-if="news.status == 1" class="badge badge-primary">{{ status[news.status] }}</span>
+                <span v-if="news.status == config.STATUS_ON" class="badge badge-primary">{{ config.array_status[news.status] }}</span>
                 <span
-                  v-if="news.status == 2"
+                  v-if="news.status == config.STATUS_OFF"
                   class="badge badge-secondary"
-                >{{ status[news.status] }}</span>
+                >{{ config.array_status[news.status] }}</span>
               </td>
               <td>{{ news.title }}</td>
               <td>{{ news.text}}</td>
               <td>
-                <div v-for="news in news.add_category" :key="news.id">{{news.title}}</div>
+                <div v-for="news in news.add_category" :key="news.id">{{news.title}}<hr></div>
               </td>
               <td>
-                <RouterLink class="edit" :to="`/admin/news/edit/${news.id}`">更新</RouterLink>
+                <RouterLink class="btn btn-primary text-nowrap" :to="`/admin/news/edit/${news.id}`">更新</RouterLink>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
       <Pagination :data="items"></Pagination>
-      <Loading v-show="loading"></Loading>
     </div>
   </main>
 </template>
 
 
 <script>
-import { OK, STATUS, MESSAGE_UPDATE } from "../../util";
-import Pagination from "../../components/Admin/Pagination.vue";
-import Loading from "../../components/Loading.vue";
+import { OK, MESSAGE_UPDATE } from "../util";
+import Pagination from "../components/Pagination.vue";
 
 export default {
   components: {
-    Loading,
     Pagination
   },
   props: {
@@ -157,12 +153,11 @@ export default {
       selected: [],
       isAllSelected: false,
       selectedCatIds: [],
-      status: STATUS,
       laravelData: {},
       news_arr: [],
+      config:[],
       currentPage: 0,
       lastPage: 0,
-      loading: false,
       fullPage: true,
       searchForm: {
         status: "0",
@@ -176,7 +171,8 @@ export default {
   // },
   methods: {
     async init() {
-      this.loading = true;
+      this.config = this.$store.getters["config/config"];
+      this.$store.commit("loading/setLoading", true);
       const response = await axios.post(
         `/api/admin/news/sarch?page=${this.page}`,
         this.searchForm
@@ -187,12 +183,12 @@ export default {
       }
       this.items = response.data;
       this.news_arr = response.data.data;
-      this.loading = false;
+      this.$store.commit("loading/setLoading", false);
     },
     async sarch() {
-      this.loading = true;
+      this.$store.commit("loading/setLoading", true);
       const response = await axios.post(
-        `/api/admin/news/sarch?page=1`,
+        `/api/admin/news/sarch?page=` + 1,
         this.searchForm
       );
       if (response.status !== OK) {
@@ -201,8 +197,8 @@ export default {
       }
       this.items = response.data;
       this.news_arr = response.data.data;
-      this.loading = false;
-      this.$router.push("/admin/news");
+      this.$store.commit("loading/setLoading", false);
+      //this.$router.push("/admin/news");
     },
     selectAllCats() {
       if (this.isAllSelected) {

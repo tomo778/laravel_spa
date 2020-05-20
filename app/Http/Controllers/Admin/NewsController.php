@@ -21,6 +21,11 @@ class NewsController extends Controller
         return News::with('add_category')->orderBy('id', 'desc')->paginate(20);
     }
 
+    public function validation(AdminNews $request): bool
+    {
+        return true;
+    }
+
     public function register(AdminNews $request): int
     {
         $q = News::create();

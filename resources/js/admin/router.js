@@ -1,15 +1,15 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 //
-import Login from './pages/admin/Login.vue'
-import AdminTop from './pages/admin/Top.vue'
-import AdminStaff from './pages/admin/Staff.vue'
-import AdminStaffEdit from './pages/admin/StaffEdit.vue'
-import AdminNews from './pages/admin/News.vue'
-import AdminNewsEdit from './pages/admin/NewsEdit.vue'
-import AdminCategory from './pages/admin/Category.vue'
-import AdminCategoryEdit from './pages/admin/CategoryEdit.vue'
-import AdminCategorySort from './pages/admin/CategorySort.vue'
+import Login from './pages/Login.vue'
+import AdminTop from './pages/Top.vue'
+import AdminStaff from './pages/Staff.vue'
+import AdminStaffEdit from './pages/StaffEdit.vue'
+import AdminNews from './pages/News.vue'
+import AdminNewsEdit from './pages/NewsEdit.vue'
+import AdminCategory from './pages/Category.vue'
+import AdminCategoryEdit from './pages/CategoryEdit.vue'
+import AdminCategorySort from './pages/CategorySort.vue'
 //
 import SystemError from './pages/errors/System.vue'
 import NotFound from './pages/errors/NotFound.vue'
@@ -46,7 +46,7 @@ const routes = [
     component: AdminNews,
     props: route => {
       return {
-        page: route.query.p
+        page: Number(route.query.p)
       }
     },
     meta: { requiresAuth: true }

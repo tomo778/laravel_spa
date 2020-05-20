@@ -1,7 +1,7 @@
 <?php
 return [
 	//
-	'status' => [
+	'array_status' => [
 		1 => '公開',
 		2 => '非公開',
 	],
@@ -9,7 +9,7 @@ return [
 	'STATUS_OFF' => 2,
 	'STATUS_DELETE' => 9,
 	//
-	'role' => [
+	'array_role' => [
 		1 => '管理者',
 		2 => 'スタッフ',
 	],

@@ -7,8 +7,6 @@ Vue.use(VueMeta, {
 })
 import VModal from 'vue-js-modal'
 Vue.use(VModal)
-import VueLoading from 'vue-loading-template'
-Vue.use(VueLoading, /** options **/)
 import router from './router'
 import store from './store'
 import App from './App.vue'

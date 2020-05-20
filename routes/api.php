@@ -22,6 +22,13 @@ Route::post('/detail', 'NewsController@detail');
 Route::post('/get/categorys', 'NewsController@getCategorys');
 Route::post('/get/archives', 'NewsController@getArchives');
 
+Route::post(
+    '/get/config',
+    function () {
+        return config('const');
+    }
+);
+
 // 会員登録
 Route::post('/register', 'Auth\RegisterController@register')->name('register');
 // ログイン
@@ -42,6 +49,7 @@ Route::post('/admin/user/update', 'Admin\UserController@update');
 
 Route::post('/admin/news', 'Admin\NewsController@list');
 Route::post('/admin/news/register', 'Admin\NewsController@register');
+Route::post('/admin/news/validation', 'Admin\NewsController@validation');
 Route::post('/admin/news/detail/{id}', 'Admin\NewsController@detail');
 Route::post('/admin/news/update', 'Admin\NewsController@update');
 Route::post('/admin/news/selectbox', 'Admin\NewsController@selectbox');
@@ -50,6 +58,7 @@ Route::post('/admin/news/sarch', 'Admin\NewsController@sarch');
 Route::post('/admin/category', 'Admin\CategoryController@index');
 Route::post('/admin/category/list', 'Admin\CategoryController@list');
 Route::post('/admin/category/register', 'Admin\CategoryController@register');
+Route::post('/admin/category/validation', 'Admin\CategoryController@validation');
 Route::post('/admin/category/detail/{id}', 'Admin\CategoryController@detail');
 Route::post('/admin/category/update', 'Admin\CategoryController@update');
 Route::post('/admin/category/sort', 'Admin\CategoryController@sort');

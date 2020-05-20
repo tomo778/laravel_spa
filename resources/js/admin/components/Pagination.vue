@@ -68,7 +68,6 @@ export default {
       return this.data.next_page_url != null;
     },
     pages() {
-      console.log(this.data);
       var pages = [];
       var link_num = this.link_num / 2;
       for (let i = 1; i <= this.data.last_page; i++) {

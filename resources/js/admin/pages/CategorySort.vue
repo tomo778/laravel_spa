@@ -24,46 +24,20 @@
         <button @click.prevent="show" class="btn btn-primary edit_btn">並び替える</button>
       </footer>
     </form>
-    <loading :active.sync="isLoading" :can-cancel="true" :is-full-page="fullPage"></loading>
-    <modal name="hello-world" :resizable="true">
-      <div class="modal-header">
-        <h2>確認</h2>
-      </div>
-      <div class="modal-body">
-        <p>本当に宜しいでしょうか？</p>
-        <div>
-          <draggable :options="options">
-            <div class="item" v-for="item in items" :key="item.id">{{item.name}}</div>
-          </draggable>
-        </div>
-        <button v-on:click="update" class="btn btn-primary edit_btn">ok</button>
-        <button v-on:click="hide" class="btn btn-primary edit_btn">閉じる</button>
-      </div>
-    </modal>
+    <v-dialog />
   </main>
 </template>
 
 <script>
-import {
-  MESSAGE_ERR,
-  MESSAGE_CREATE,
-  MESSAGE_UPDATE,
-  OK,
-  STATUS
-} from "../../util";
-import Loading from "vue-loading-overlay";
-import "vue-loading-overlay/dist/vue-loading.css";
+import { MESSAGE_ERR, MESSAGE_CREATE, MESSAGE_UPDATE, OK } from "../util";
 import draggable from "vuedraggable";
 
 export default {
   components: {
-    Loading,
     draggable
   },
   data() {
     return {
-      isLoading: false,
-      fullPage: true,
       lists: {
         sort_num: "",
         title: "",
@@ -73,16 +47,32 @@ export default {
   },
   methods: {
     show() {
-      this.$modal.show("hello-world");
-    },
-    hide() {
-      this.$modal.hide("hello-world");
+      this.$modal.show("dialog", {
+        title: "確認!",
+        text: "本当に宜しいでしょうか？",
+        buttons: [
+          {
+            title: "OK",
+            handler: () => {
+              this.update();
+            }
+          },
+          // {
+          //   title: "", // Button title
+          //   default: true, // Will be triggered by default if 'Enter' pressed.
+          //   handler: () => {} // Button click handler
+          // },
+          {
+            title: "Close"
+          }
+        ]
+      });
     },
     async update() {
-      this.hide();
-      this.isLoading = true;
+      this.$modal.hide("dialog");
+      this.$store.commit("loading/setLoading", true);
       const response = await axios.post(`/api/admin/category/sort`, this.lists);
-      this.isLoading = false;
+      this.$store.commit("loading/setLoading", false);
       if (response.status !== OK) {
         this.$store.commit("error/setCode", response.status);
         this.$store.commit("message/setContent", {
@@ -109,14 +99,14 @@ export default {
       });
     },
     async init() {
-      this.isLoading = true;
+      this.$store.commit("loading/setLoading", true);
       const response2 = await axios.post(`/api/admin/category`);
       if (response2.status !== OK) {
         this.$store.commit("error/setCode", response2.status);
         return false;
       }
       this.lists = response2.data;
-      this.isLoading = false;
+      this.$store.commit("loading/setLoading", false);
     }
   },
   created() {
