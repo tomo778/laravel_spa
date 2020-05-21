@@ -50,7 +50,7 @@ const actions = {
   // ログイン
   async login (context, data) {
     context.commit('setApiStatus', null)
-    const response = await axios.post('/api/admin/login', data)
+    const response = await axios.post('/api/login', data)
 
     if (response.status === OK) {
       context.commit('setApiStatus', true)
@@ -69,7 +69,7 @@ const actions = {
   // ログアウト
   async logout (context) {
     context.commit('setApiStatus', null)
-    const response = await axios.post('/api/admin/logout')
+    const response = await axios.post('/api/logout')
 
     if (response.status === OK) {
       context.commit('setApiStatus', true)
@@ -84,7 +84,7 @@ const actions = {
   // ログインユーザーチェック
   async currentUser (context) {
     context.commit('setApiStatus', null)
-    const response = await axios.get('/api/admin/user')
+    const response = await axios.get('/api/user')
     const user = response.data || null
 
     if (response.status === OK) {

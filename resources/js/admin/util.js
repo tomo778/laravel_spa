@@ -59,5 +59,16 @@ export const plugins = [
         path: '/admin/category/sort',
       },
     ]
+  },
+  {
+    plugin: 'user',
+    name: 'ユーザー',
+    feather: 'users',
+    child: [
+      {
+        name: '一覧',
+        path: '/admin/user',
+      }
+    ]
   }
 ]

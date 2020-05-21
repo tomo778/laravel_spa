@@ -45,9 +45,15 @@ class LoginController extends Controller
         return Auth::guard('admin');
     }
 
+    //ログインした直後に何かしらの処理
     protected function authenticated(Request $request, $user)
     {
         return $user;
+    }
+
+    protected function logout(Request $request)
+    {
+        $this->guard()->logout();
     }
 
     // ログアウトした時のリダイレクト先

@@ -47651,7 +47651,7 @@ var actions = {
             case 0:
               context.commit('setApiStatus', null);
               _context2.next = 3;
-              return axios.post('/api/admin/login', data);
+              return axios.post('/api/login', data);
 
             case 3:
               response = _context2.sent;
@@ -47694,7 +47694,7 @@ var actions = {
             case 0:
               context.commit('setApiStatus', null);
               _context3.next = 3;
-              return axios.post('/api/admin/logout');
+              return axios.post('/api/logout');
 
             case 3:
               response = _context3.sent;
@@ -47732,7 +47732,7 @@ var actions = {
             case 0:
               context.commit('setApiStatus', null);
               _context4.next = 3;
-              return axios.get('/api/admin/user');
+              return axios.get('/api/user');
 
             case 3:
               response = _context4.sent;

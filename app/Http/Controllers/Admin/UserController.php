@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Admin;
+use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -35,6 +36,11 @@ class UserController extends Controller
     public function list(): \Illuminate\Pagination\LengthAwarePaginator
     {
         return Admin::orderBy('id', 'desc')->paginate(10);
+    }
+
+    public function list2(): \Illuminate\Pagination\LengthAwarePaginator
+    {
+        return User::orderBy('id', 'desc')->paginate(10);
     }
 
     public function detail(Request $request): \App\Admin

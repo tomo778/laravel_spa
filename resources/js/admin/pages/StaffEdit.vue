@@ -98,7 +98,7 @@ export default {
   },
   methods: {
     async register() {
-      const response = await axios.post("/api/register", this.registerForm);
+      const response = await axios.post("/api/admin/register", this.registerForm);
       if (response.status !== CREATED) {
         this.registerErrors = response.data.errors;
         this.$store.commit("error/setCode", response.status);

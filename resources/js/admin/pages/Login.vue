@@ -34,13 +34,17 @@
       <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
       <p class="mt-5 mb-3 text-muted">&copy; 2019</p>
     </form>
+    <Loading />
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
-
+import Loading from "../components/Loading.vue";
 export default {
+  components: {
+    Loading
+  },
   data() {
     return {
       loginForm: {
@@ -55,9 +59,10 @@ export default {
   }),
   methods: {
     async login() {
+      this.$store.commit("loading/setLoading", true);
       // authストアのloginアクションを呼び出す
       await this.$store.dispatch("auth/login", this.loginForm);
-
+      this.$store.commit("loading/setLoading", false);
       if (this.apiStatus) {
         // トップページに移動する
         this.$router.push("/admin");

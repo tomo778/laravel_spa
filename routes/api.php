@@ -31,10 +31,11 @@ Route::post(
 Route::post('/register', 'Auth\RegisterController@register')->name('register');
 Route::post('/login', 'Auth\LoginController@login')->name('login');
 Route::post('/logout', 'Auth\LoginController@logout')->name('logout');
+Route::get('/user', 'Auth\LoginController@getUser');
 Route::get(
     '/user',
     function () {
-        return Auth::user();
+        return Auth::guard('user')->user();
     }
 );
 
@@ -48,6 +49,8 @@ Route::get(
         return Auth::guard('admin')->user();
     }
 );
+
+Route::post('/admin/user/list2', 'Admin\UserController@list2');
 
 Route::post('/admin/user/list', 'Admin\UserController@list');
 Route::post('/admin/user/detail/{id}', 'Admin\UserController@detail');

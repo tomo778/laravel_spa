@@ -1,7 +1,7 @@
 <template>
   <div v-show="$store.state.loading.loading" class="fullview text-center">
     <div class="loading-spacer"></div>
-    <div class="spinner-border text-secondary" style="width: 5rem; height: 5rem;" role="status"></div>
+    <div class="spinner-border text-secondary" style="width: 4rem; height: 4rem;" role="status"></div>
     <!-- <hr />
     <span>Loading...</span> -->
   </div>

@@ -10,6 +10,8 @@ import AdminNewsEdit from './pages/NewsEdit.vue'
 import AdminCategory from './pages/Category.vue'
 import AdminCategoryEdit from './pages/CategoryEdit.vue'
 import AdminCategorySort from './pages/CategorySort.vue'
+import AdminUser from './pages/User.vue'
+
 //
 import SystemError from './pages/errors/System.vue'
 import NotFound from './pages/errors/NotFound.vue'
@@ -81,6 +83,11 @@ const routes = [
     path: '/admin/category/edit/:id',
     component: AdminCategoryEdit,
     props: true,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/admin/user',
+    component: AdminUser,
     meta: { requiresAuth: true }
   },
   {
