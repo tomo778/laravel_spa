@@ -3959,26 +3959,27 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 _this5.category_arr = response2.data;
 
                 if (!(_this5.id === undefined)) {
-                  _context4.next = 15;
+                  _context4.next = 16;
                   break;
                 }
 
                 _this5.title = "登録";
-                _this5.registerForm = [];
+                _this5.registerForm.title = [];
+                _this5.registerForm.text = [];
 
                 _this5.$store.commit("loading/setLoading", false);
 
                 return _context4.abrupt("return");
 
-              case 15:
-                _context4.next = 17;
+              case 16:
+                _context4.next = 18;
                 return axios.post("/api/admin/news/detail/".concat(_this5.id));
 
-              case 17:
+              case 18:
                 response = _context4.sent;
 
                 if (!(response.status !== _util__WEBPACK_IMPORTED_MODULE_2__["OK"])) {
-                  _context4.next = 21;
+                  _context4.next = 22;
                   break;
                 }
 
@@ -3986,13 +3987,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
                 return _context4.abrupt("return", false);
 
-              case 21:
+              case 22:
                 _this5.$store.commit("loading/setLoading", false);
 
                 _this5.title = "更新";
                 _this5.registerForm = response.data;
 
-              case 24:
+              case 25:
               case "end":
                 return _context4.stop();
             }
@@ -4128,7 +4129,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 0:
                 _this.isLoading = true;
                 _context.next = 3;
-                return axios.post("/api/admin/user/?page=".concat(_this.page));
+                return axios.post("/api/admin/user/list?page=".concat(_this.page));
 
               case 3:
                 response = _context.sent;
@@ -38147,8 +38148,8 @@ var mutations = {
   }
 };
 var actions = {
-  // ログイン
-  login: function login(context, data) {
+  // 会員登録
+  register: function register(context, data) {
     return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
       var response;
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
@@ -38157,12 +38158,12 @@ var actions = {
             case 0:
               context.commit('setApiStatus', null);
               _context.next = 3;
-              return axios.post('/api/login', data);
+              return axios.post('/api/register', data);
 
             case 3:
               response = _context.sent;
 
-              if (!(response.status === _util__WEBPACK_IMPORTED_MODULE_1__["OK"])) {
+              if (!(response.status === _util__WEBPACK_IMPORTED_MODULE_1__["CREATED"])) {
                 _context.next = 8;
                 break;
               }
@@ -38175,7 +38176,7 @@ var actions = {
               context.commit('setApiStatus', false);
 
               if (response.status === _util__WEBPACK_IMPORTED_MODULE_1__["UNPROCESSABLE_ENTITY"]) {
-                context.commit('setLoginErrorMessages', response.data.errors);
+                context.commit('setRegisterErrorMessages', response.data.errors);
               } else {
                 context.commit('error/setCode', response.status, {
                   root: true
@@ -38190,8 +38191,8 @@ var actions = {
       }, _callee);
     }))();
   },
-  // ログアウト
-  logout: function logout(context) {
+  // ログイン
+  login: function login(context, data) {
     return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
       var response;
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
@@ -38200,7 +38201,7 @@ var actions = {
             case 0:
               context.commit('setApiStatus', null);
               _context2.next = 3;
-              return axios.post('/api/logout');
+              return axios.post('/api/admin/login', data);
 
             case 3:
               response = _context2.sent;
@@ -38211,14 +38212,19 @@ var actions = {
               }
 
               context.commit('setApiStatus', true);
-              context.commit('setUser', null);
+              context.commit('setUser', response.data);
               return _context2.abrupt("return", false);
 
             case 8:
               context.commit('setApiStatus', false);
-              context.commit('error/setCode', response.status, {
-                root: true
-              });
+
+              if (response.status === _util__WEBPACK_IMPORTED_MODULE_1__["UNPROCESSABLE_ENTITY"]) {
+                context.commit('setLoginErrorMessages', response.data.errors);
+              } else {
+                context.commit('error/setCode', response.status, {
+                  root: true
+                });
+              }
 
             case 10:
             case "end":
@@ -38228,30 +38234,68 @@ var actions = {
       }, _callee2);
     }))();
   },
-  // ログインユーザーチェック
-  currentUser: function currentUser(context) {
+  // ログアウト
+  logout: function logout(context) {
     return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
-      var response, user;
+      var response;
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
             case 0:
               context.commit('setApiStatus', null);
               _context3.next = 3;
-              return axios.get('/api/user');
+              return axios.post('/api/admin/logout');
 
             case 3:
               response = _context3.sent;
+
+              if (!(response.status === _util__WEBPACK_IMPORTED_MODULE_1__["OK"])) {
+                _context3.next = 8;
+                break;
+              }
+
+              context.commit('setApiStatus', true);
+              context.commit('setUser', null);
+              return _context3.abrupt("return", false);
+
+            case 8:
+              context.commit('setApiStatus', false);
+              context.commit('error/setCode', response.status, {
+                root: true
+              });
+
+            case 10:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3);
+    }))();
+  },
+  // ログインユーザーチェック
+  currentUser: function currentUser(context) {
+    return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4() {
+      var response, user;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              context.commit('setApiStatus', null);
+              _context4.next = 3;
+              return axios.get('/api/admin/user');
+
+            case 3:
+              response = _context4.sent;
               user = response.data || null;
 
               if (!(response.status === _util__WEBPACK_IMPORTED_MODULE_1__["OK"])) {
-                _context3.next = 9;
+                _context4.next = 9;
                 break;
               }
 
               context.commit('setApiStatus', true);
               context.commit('setUser', user);
-              return _context3.abrupt("return", false);
+              return _context4.abrupt("return", false);
 
             case 9:
               context.commit('setApiStatus', false);
@@ -38261,10 +38305,10 @@ var actions = {
 
             case 11:
             case "end":
-              return _context3.stop();
+              return _context4.stop();
           }
         }
-      }, _callee3);
+      }, _callee4);
     }))();
   }
 };

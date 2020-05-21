@@ -61,7 +61,7 @@ export default {
   methods: {
     async list() {
       this.isLoading = true;
-      const response = await axios.post(`/api/admin/user/?page=${this.page}`);
+      const response = await axios.post(`/api/admin/user/list?page=${this.page}`);
 
       if (response.status !== OK) {
         this.$store.commit("error/setCode", response.status);

@@ -29,10 +29,28 @@ const mutations = {
 
 const actions = {
 
+  // 会員登録
+  async register (context, data) {
+    context.commit('setApiStatus', null)
+    const response = await axios.post('/api/register', data)
+
+    if (response.status === CREATED) {
+      context.commit('setApiStatus', true)
+      context.commit('setUser', response.data)
+      return false
+    }
+
+    context.commit('setApiStatus', false)
+    if (response.status === UNPROCESSABLE_ENTITY) {
+      context.commit('setRegisterErrorMessages', response.data.errors)
+    } else {
+      context.commit('error/setCode', response.status, { root: true })
+    }
+  },
   // ログイン
   async login (context, data) {
     context.commit('setApiStatus', null)
-    const response = await axios.post('/api/login', data)
+    const response = await axios.post('/api/admin/login', data)
 
     if (response.status === OK) {
       context.commit('setApiStatus', true)
@@ -51,7 +69,7 @@ const actions = {
   // ログアウト
   async logout (context) {
     context.commit('setApiStatus', null)
-    const response = await axios.post('/api/logout')
+    const response = await axios.post('/api/admin/logout')
 
     if (response.status === OK) {
       context.commit('setApiStatus', true)
@@ -66,7 +84,7 @@ const actions = {
   // ログインユーザーチェック
   async currentUser (context) {
     context.commit('setApiStatus', null)
-    const response = await axios.get('/api/user')
+    const response = await axios.get('/api/admin/user')
     const user = response.data || null
 
     if (response.status === OK) {

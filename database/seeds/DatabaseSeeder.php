@@ -4,6 +4,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
 use App\User;
+use App\Admin;
 use App\Category;
 
 class DatabaseSeeder extends Seeder
@@ -19,6 +20,7 @@ class DatabaseSeeder extends Seeder
         Model::unguard();
 
         $this->call('UserTableSeeder');
+        $this->call('AdminTableSeeder');
         $this->call('CategoryTableSeeder');
         $this->call('NewsTableSeeder');
         $this->call('CategoryRelTableSeeder');
@@ -36,11 +38,33 @@ class UserTableSeeder extends Seeder
 
         User::create([
             'id' => '1',
+            'name' => 'aaa',
+            'email' => 'aaa@gmail.com',
+            'password' => password_hash('aaa', PASSWORD_DEFAULT)
+        ]);
+        User::create([
+            'id' => '2',
+            'name' => 'bbb',
+            'email' => 'bbb@gmail.com',
+            'password' => password_hash('bbb', PASSWORD_DEFAULT)
+        ]);
+    }
+}
+
+class AdminTableSeeder extends Seeder
+{
+
+    public function run()
+    {
+        //DB::table('admin')->truncate(); //最初に全件削除
+
+        Admin::create([
+            'id' => '1',
             'name' => 'admin',
             'email' => 'admin@gmail.com',
             'password' => password_hash('admin', PASSWORD_DEFAULT)
         ]);
-        User::create([
+        Admin::create([
             'id' => '2',
             'name' => 'aaa',
             'email' => 'aaa@gmail.com',

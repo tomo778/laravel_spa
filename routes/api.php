@@ -17,11 +17,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/index', 'NewsController@index')->name('index');
 Route::get('/category', 'NewsController@list');
 Route::get('/archive', 'NewsController@archive');
-
 Route::post('/detail', 'NewsController@detail');
 Route::post('/get/categorys', 'NewsController@getCategorys');
 Route::post('/get/archives', 'NewsController@getArchives');
-
 Route::post(
     '/get/config',
     function () {
@@ -29,13 +27,10 @@ Route::post(
     }
 );
 
-// 会員登録
+// Auth
 Route::post('/register', 'Auth\RegisterController@register')->name('register');
-// ログイン
 Route::post('/login', 'Auth\LoginController@login')->name('login');
-// ログアウト
 Route::post('/logout', 'Auth\LoginController@logout')->name('logout');
-// ログインユーザー
 Route::get(
     '/user',
     function () {
@@ -43,7 +38,18 @@ Route::get(
     }
 );
 
-Route::post('/admin/user', 'Admin\UserController@list');
+// Auth
+Route::post('/admin/register', 'Admin\Auth\RegisterController@register');
+Route::post('/admin/login', 'Admin\Auth\LoginController@login');
+Route::post('/admin/logout', 'Admin\Auth\LoginController@logout');
+Route::get(
+    '/admin/user',
+    function () {
+        return Auth::guard('admin')->user();
+    }
+);
+
+Route::post('/admin/user/list', 'Admin\UserController@list');
 Route::post('/admin/user/detail/{id}', 'Admin\UserController@detail');
 Route::post('/admin/user/update', 'Admin\UserController@update');
 

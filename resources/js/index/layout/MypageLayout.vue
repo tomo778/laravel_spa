@@ -35,7 +35,7 @@
         <RouterView />
         <!-- /.blog-main -->
 
-        <SideNav :categorys="categorys" :archives="archives" />
+        <MypageNav />
         <!-- /.blog-sidebar -->
       </div>
       <!-- /.row -->
@@ -51,7 +51,7 @@
 
 <script>
 import { NOT_FOUND, UNAUTHORIZED, INTERNAL_SERVER_ERROR, OK } from "../util";
-import SideNav from "../components/SideNav.vue";
+import MypageNav from "../components/MypageNav.vue";
 import { mapState, mapGetters } from "vuex";
 
 
@@ -83,7 +83,7 @@ export default {
     };
   },
   components: {
-    SideNav
+    MypageNav
   },
   metaInfo: {
     title: "top"

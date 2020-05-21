@@ -191,7 +191,8 @@ export default {
       this.category_arr = response2.data;
       if (this.id === undefined) {
         this.title = "登録";
-        this.registerForm = [];
+        this.registerForm.title = [];
+        this.registerForm.text = [];
         this.$store.commit("loading/setLoading", false);
         return;
       }
