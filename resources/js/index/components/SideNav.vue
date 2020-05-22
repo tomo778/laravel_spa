@@ -22,11 +22,6 @@
       <ul class="list-unstyled mb-0">
         <li v-for="(archive, key) in archives" :key="archive.id">
           <RouterLink :to="`/archive/${archive.year}/${archive.month}`">{{archive.year}}年{{archive.month}}月</RouterLink>({{archive.post_count}})
-          <!-- <ul class="list-unstyled mb-0">
-            <li v-for="(v, key) in archive" :key="v.id">
-              <RouterLink :to="`/category/${v.month}`">{{v.month}}月</RouterLink>({{v.post_count}})
-            </li>
-          </ul> -->
         </li>
       </ul>
     </div>
@@ -34,7 +29,35 @@
 </template>
 
 <script>
+import { NOT_FOUND, UNAUTHORIZED, INTERNAL_SERVER_ERROR, OK } from "../util";
+
 export default {
-  props: ["categorys", "archives"]
+  data() {
+    return {
+      categorys: [],
+      archives: []
+    };
+  },
+  methods: {
+    async init() {
+      // authストアのloginアクションを呼び出す
+      await this.$store.dispatch("categorys/categorys");
+      this.categorys = this.$store.getters["categorys/categorys"];
+      const response = await axios.post(`/api/get/archives`);
+      if (response.status !== OK) {
+        this.$store.commit("error/setCode", response.status);
+        return false;
+      }
+      this.archives = response.data;
+    }
+  },
+  created() {
+    this.init();
+  },
+  watch: {
+    $route() {
+      this.init();
+    }
+  }
 };
 </script>

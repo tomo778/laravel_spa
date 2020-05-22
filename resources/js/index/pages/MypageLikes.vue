@@ -1,44 +1,44 @@
 <template>
   <div class="col-md-8 blog-main">
-    <h3 class="pb-3 mb-4 font-italic border-bottom">category: {{category.title}}</h3>
-    <p style="white-space: pre-wrap;" v-text="category.text"></p>
-    <hr>
-    <Pagination :data="items"></Pagination>
+    <h3 class="pb-3 mb-4 border-bottom">お気に入り一覧</h3>
     <NewsBlock v-for="news in news_arr" :key="news.id" :news="news" @like="onLikeClick" />
     <Pagination :data="items"></Pagination>
   </div>
 </template>
 
 <script>
-import { OK,NOT_FOUND } from "../util";
+import { OK } from "../util";
 import NewsBlock from "../components/NewsBlock.vue";
 import Pagination from "../components/Pagination.vue";
 
 export default {
+  metaInfo() {
+    return {
+      title: "mypage",
+      meta: [
+        {
+          name: "description",
+          content: "newのサイト"
+        }
+      ]
+    };
+  },
   components: {
-    NewsBlock,
-    Pagination
+    Pagination,
+    NewsBlock
   },
   props: {
     page: {
       type: Number,
       required: true,
       default: 1
-    },
-    id: {
-      type: String,
-      required: false
     }
   },
   data() {
     return {
-      category: [],
-      items: [],
       news_arr: [],
+      items: []
     };
-  },
-  created() {
-    this.list();
   },
   methods: {
     onLikeClick({ id, liked }) {
@@ -81,26 +81,17 @@ export default {
       });
     },
     async list() {
-      const response = await axios.get(
-        `/api/category?page=${this.page}&id=${this.id}`
-      );
+      const response = await axios.get(`/api/likes?page=${this.page}`);
       if (response.status !== OK) {
         this.$store.commit("error/setCode", response.status);
         return false;
       }
-      if (response.data.data == "") {
-        this.$store.commit("error/setCode", NOT_FOUND);
-        return false;
-      }
-      var categorys = this.$store.getters["categorys/categorys"];
-      categorys.forEach(e => {
-        if (e.id == this.id) {
-          this.category = e;
-        }
-      });
       this.news_arr = response.data.data;
       this.items = response.data;
     }
+  },
+  created() {
+    this.list();
   },
   watch: {
     $route: {

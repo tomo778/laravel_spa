@@ -8,6 +8,7 @@ import Detail from './pages/Detail.vue'
 import Category from './pages/Category.vue'
 import Archive from './pages/Archive.vue'
 import Mypage from './pages/Mypage.vue'
+import MypageLikes from './pages/MypageLikes.vue'
 
 //
 import SystemError from './pages/errors/System.vue'
@@ -23,7 +24,6 @@ const routes = [
   {
     path: '/',
     component: Index,
-    meta: { layout: "Index" },
     props: route => {
       const page = route.query.p
       return { page: /^[1-9][0-9]*$/.test(page) ? page * 1 : 1 }
@@ -32,23 +32,32 @@ const routes = [
   {
     path: '/login',
     component: Login,
-    meta: { layout: "Index", requiresGuest: true }
+    meta: {requiresGuest: true }
   },
   {
     path: '/register',
     component: Register,
-    meta: { layout: "Index", requiresGuest: true }
+    meta: {requiresGuest: true }
   },
   {
     path: '/mypage',
     component: Mypage,
-    meta: { layout: "Mypage", requiresAuth: true }
+    meta: { layout: "MypageNav", requiresAuth: true }
+  },
+  {
+    path: '/mypage/likes',
+    component: MypageLikes,
+    props: route => {
+      return {
+        page: route.query.p
+      }
+    },
+    meta: { layout: "MypageNav", requiresAuth: true }
   },
   {
     path: '/detail/:id',
     props: true,
-    component: Detail,
-    meta: { layout: "Index" }
+    component: Detail
   },
   {
     path: '/category/:id',
@@ -58,8 +67,7 @@ const routes = [
         page: route.query.p
       }
     },
-    component: Category,
-    meta: { layout: "Index" }
+    component: Category
   },
   {
     path: '/archive/:y/:m',
@@ -70,8 +78,7 @@ const routes = [
         page: route.query.p
       }
     },
-    component: Archive,
-    meta: { layout: "Index" }
+    component: Archive
   },
   {
     path: '/500',
@@ -79,8 +86,7 @@ const routes = [
   },
   {
     path: '*',
-    component: NotFound,
-    meta: { layout: "Index" }
+    component: NotFound
   }
 ];
 

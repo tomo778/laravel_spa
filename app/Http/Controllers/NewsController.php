@@ -8,6 +8,7 @@ use App\CategoryRel;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class NewsController extends Controller
 {
@@ -68,5 +69,32 @@ class NewsController extends Controller
             ->orderBy('year', 'desc')
             ->orderBy('month', 'desc')
             ->get();
+    }
+
+    public function like(string $id): array
+    {
+        $news = News::where('id', $id)->with('likes')->first();
+
+        if (!$news) {
+            abort(404);
+        }
+
+        $news->likes()->detach(Auth::user()->id);
+        $news->likes()->attach(Auth::user()->id);
+
+        return ["news_id" => $id];
+    }
+
+    public function unlike(string $id): array
+    {
+        $news = News::where('id', $id)->with('likes')->first();
+
+        if (!$news) {
+            abort(404);
+        }
+
+        $news->likes()->detach(Auth::user()->id);
+
+        return ["news_id" => $id];
     }
 }

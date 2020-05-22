@@ -12,10 +12,10 @@
       <h4 class="font-italic">メニュー</h4>
       <ol class="list-unstyled mb-0">
         <li>
-          <RouterLink :to="`/category/`">top</RouterLink>
+          <RouterLink :to="`/mypage/`">マイページトップ</RouterLink>
         </li>
         <li>
-          <RouterLink :to="`/category/`">データ変更</RouterLink>
+          <RouterLink :to="`/mypage/likes`">お気に入り一覧</RouterLink>
         </li>
       </ol>
     </div>

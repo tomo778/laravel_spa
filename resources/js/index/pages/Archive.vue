@@ -2,7 +2,7 @@
   <div class="col-md-8 blog-main">
     <h3 class="pb-3 mb-4 font-italic border-bottom">{{y}}年{{m}}月</h3>
     <Pagination :data="items"></Pagination>
-    <NewsBlock :news_arr="news_arr" />
+    <NewsBlock v-for="news in news_arr" :key="news.id" :news="news" @like="onLikeClick" />
     <Pagination :data="items"></Pagination>
   </div>
 </template>
@@ -42,6 +42,45 @@ export default {
     this.list();
   },
   methods: {
+    onLikeClick({ id, liked }) {
+      if (!this.$store.getters["auth/check"]) {
+        alert("いいね機能を使うにはログインしてください。");
+        return false;
+      }
+      if (liked) {
+        this.unlike(id);
+      } else {
+        this.like(id);
+      }
+    },
+    async like(id) {
+      const response = await axios.put(`/api/news/like/${id}`);
+      if (response.status !== OK) {
+        this.$store.commit("error/setCode", response.status);
+        return false;
+      }
+      this.news_arr = this.news_arr.map(news => {
+        if (news.id == response.data.news_id) {
+          news.likes_count += 1;
+          news.liked_by_user = true;
+        }
+        return news;
+      });
+    },
+    async unlike(id) {
+      const response = await axios.delete(`/api/news/like/${id}`);
+      if (response.status !== OK) {
+        this.$store.commit("error/setCode", response.status);
+        return false;
+      }
+      this.news_arr = this.news_arr.map(news => {
+        if (news.id == response.data.news_id) {
+          news.likes_count -= 1;
+          news.liked_by_user = false;
+        }
+        return news;
+      });
+    },
     async list() {
       const response = await axios.get(`/api/archive?page=${this.page}&y=${this.y}&m=${this.m}`);
       if (response.status !== OK) {

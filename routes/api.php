@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/index', 'NewsController@index')->name('index');
+Route::get('/likes', 'MypageController@likes');
 Route::get('/category', 'NewsController@list');
 Route::get('/archive', 'NewsController@archive');
 Route::post('/detail', 'NewsController@detail');
@@ -26,6 +27,8 @@ Route::post(
         return config('const');
     }
 );
+Route::put('/news/like/{id}', 'NewsController@like');
+Route::delete('/news/like/{id}', 'NewsController@unlike');
 
 // Auth
 Route::post('/register', 'Auth\RegisterController@register')->name('register');

@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class News extends Model
 {
@@ -21,6 +22,11 @@ class News extends Model
         'text',
     ];
 
+    /** JSONに含めるアクセサ */
+    protected $appends = [
+        'likes_count', 'liked_by_user',
+    ];
+
     public function category_rel(): \Illuminate\Database\Eloquent\Relations\hasMany
     {
         return $this->hasMany(CategoryRel::class);
@@ -32,6 +38,26 @@ class News extends Model
             Category::class,
             CategoryRel::class,
         );
+    }
+
+    public function likes(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'likes')->withTimestamps();
+    }
+
+    public function getLikesCountAttribute(): int
+    {
+        return $this->likes->count();
+    }
+
+    public function getLikedByUserAttribute(): bool
+    {
+        if (Auth::guest()) {
+            return false;
+        }
+        return $this->likes->contains(function ($user) {
+            return $user->id === Auth::user()->id;
+        });
     }
 
     public function scopeStatusCheck(Object $query): \Illuminate\Database\Eloquent\Builder

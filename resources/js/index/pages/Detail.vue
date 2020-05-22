@@ -22,6 +22,12 @@ import "vue-loading-overlay/dist/vue-loading.css";
 import moment from "moment";
 
 export default {
+  metaInfo() {
+    return {
+      title: this.detail.title,
+      titleTemplate: "%s - sitetitle"
+    };
+  },
   filters: {
     moment: function(date) {
       moment.locale("ja");

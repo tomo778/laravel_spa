@@ -1,0 +1,5 @@
+<template>
+    <footer class="blog-footer">
+      <a href="#">Back to top</a>
+    </footer>
+</template>
