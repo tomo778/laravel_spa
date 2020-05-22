@@ -7,7 +7,7 @@ use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\UserUpdate;
+use App\Http\Requests\AdminUserUpdate;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -17,7 +17,7 @@ class UserController extends Controller
         $this->middleware('auth:admin');
     }
 
-    public function update(UserUpdate $request): \Illuminate\Http\Response
+    public function update(AdminUserUpdate $request): \Illuminate\Http\Response
     {
         $array = [
             'name' => $request->name,
