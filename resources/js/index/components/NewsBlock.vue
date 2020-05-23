@@ -5,11 +5,11 @@
       <RouterLink class="edit" :to="`/category/${category.id}`">{{category.title}}</RouterLink>
     </div>
     <p class="blog-post-meta">
-      {{ news.created_at | moment}}
+      {{ news.created_at | moment_format("LL")}}
       <br />
-      更新：{{ news.updated_at | moment}}
+      更新：{{ news.updated_at | moment_format("LLL")}}
     </p>
-    <p>{{ news.text }}</p>
+    <p>{{ news.text | truncate(100, '...')}}</p>
     <RouterLink class="btn btn-primary btn-sm" :to="`/detail/${news.id}`">詳細へ</RouterLink>
       <button v-if="!news.liked_by_user" @click.prevent="like" type="button" class="btn btn-secondary btn-sm">
         お気に入り登録
@@ -24,14 +24,7 @@
 </template>
 
 <script>
-import moment from "moment";
 export default {
-  filters: {
-    moment: function(date) {
-      moment.locale("ja");
-      return moment(date).format("LLLL");
-    }
-  },
   methods: {
     like() {
       this.$emit("like", {

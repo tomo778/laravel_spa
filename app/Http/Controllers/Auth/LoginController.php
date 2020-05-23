@@ -40,11 +40,6 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
-    protected function guard()
-    {
-        return Auth::guard('user');
-    }
-
     //ログインした直後に何かしらの処理
     protected function authenticated(Request $request, $user)
     {

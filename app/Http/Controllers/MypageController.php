@@ -10,22 +10,38 @@ use Illuminate\Support\Facades\DB;
 
 class MypageController extends Controller
 {
-    // public function __construct()
-    // {
-    //     // 認証が必要
-    //     $this->middleware('auth');
-    // }
+    public function __construct()
+    {
+        // 認証が必要
+        $this->middleware('auth');
+    }
 
-    // public function update(MypageUpdate $request)
-    // {
-    //     User::where('id', Auth::id())
-    //         ->update([
-    //             'name' => $request->name,
-    //             'password' => Hash::make($request->password)
-    //         ]);
+    public function like(string $id): array
+    {
+        $news = News::where('id', $id)->with('likes')->first();
 
-    //     return response(200);
-    // }
+        if (!$news) {
+            abort(404);
+        }
+
+        $news->likes()->detach(Auth::user()->id);
+        $news->likes()->attach(Auth::user()->id);
+
+        return ["news_id" => $id];
+    }
+
+    public function unlike(string $id): array
+    {
+        $news = News::where('id', $id)->with('likes')->first();
+
+        if (!$news) {
+            abort(404);
+        }
+
+        $news->likes()->detach(Auth::user()->id);
+
+        return ["news_id" => $id];
+    }
 
     public function likes(Request $request): \Illuminate\Pagination\LengthAwarePaginator
     {
@@ -37,7 +53,8 @@ class MypageController extends Controller
         //     ->whereIn('id', $ids)
         //     ->orderByRaw("field(id," . implode(',', $ids) . ")")
         //     ->paginate(10);
-        return News::leftJoin('likes', 'news.id', '=', 'likes.news_id')
+
+        return News::Join('likes', 'news.id', '=', 'likes.news_id')
             ->select('*', 'news.id')
             ->with('add_category')
             ->where('likes.user_id', Auth::id())

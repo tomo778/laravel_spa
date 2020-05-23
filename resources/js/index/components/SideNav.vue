@@ -8,7 +8,6 @@
         サイトの説明サイトの説明サイトの説明
       </p>
     </div>
-
     <div class="p-3">
       <h4 class="font-italic">Categorys</h4>
       <ol class="list-unstyled mb-0">

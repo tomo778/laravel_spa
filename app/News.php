@@ -42,7 +42,10 @@ class News extends Model
 
     public function likes(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'likes')->withTimestamps();
+        return $this->belongsToMany(
+            User::class,
+            Likes::class
+        )->withTimestamps();
     }
 
     public function getLikesCountAttribute(): int
