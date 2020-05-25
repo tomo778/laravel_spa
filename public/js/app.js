@@ -3166,6 +3166,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../util */ "./resources/js/index/util.js");
 /* harmony import */ var _components_NewsBlock_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/NewsBlock.vue */ "./resources/js/index/components/NewsBlock.vue");
 /* harmony import */ var _components_Pagination_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/Pagination.vue */ "./resources/js/index/components/Pagination.vue");
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -3182,6 +3183,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   metaInfo: function metaInfo() {
     return {
@@ -3192,6 +3194,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }]
     };
   },
+  computed: Object(vuex__WEBPACK_IMPORTED_MODULE_4__["mapState"])({
+    news_arr: function news_arr(state) {
+      return state.like.news;
+    }
+  }),
   components: {
     Pagination: _components_Pagination_vue__WEBPACK_IMPORTED_MODULE_3__["default"],
     NewsBlock: _components_NewsBlock_vue__WEBPACK_IMPORTED_MODULE_2__["default"]
@@ -3205,27 +3212,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   data: function data() {
     return {
-      news_arr: [],
       items: []
     };
   },
   methods: {
-    onLikeClick: function onLikeClick(_ref) {
-      var id = _ref.id,
-          liked = _ref.liked;
-
-      if (!this.$store.getters["auth/check"]) {
-        alert("いいね機能を使うにはログインしてください。");
-        return false;
-      }
-
-      if (liked) {
-        this.unlike(id);
-      } else {
-        this.like(id);
-      }
-    },
-    like: function like(id) {
+    init: function init() {
       var _this = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
@@ -3235,7 +3226,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context.prev = _context.next) {
               case 0:
                 _context.next = 2;
-                return axios.put("/api/news/like/".concat(id));
+                return axios.get("/api/index?page=".concat(_this.page));
 
               case 2:
                 response = _context.sent;
@@ -3250,16 +3241,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 return _context.abrupt("return", false);
 
               case 6:
-                _this.news_arr = _this.news_arr.map(function (news) {
-                  if (news.id == response.data.news_id) {
-                    news.likes_count += 1;
-                    news.liked_by_user = true;
-                  }
+                _this.$store.commit("like/setNews", response.data.data);
 
-                  return news;
-                });
+                _this.items = response.data;
 
-              case 7:
+              case 8:
               case "end":
                 return _context.stop();
             }
@@ -3267,107 +3253,48 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee);
       }))();
     },
-    unlike: function unlike(id) {
+    likeChange: function likeChange(data) {
       var _this2 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
-        var response;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
                 _context2.next = 2;
-                return axios["delete"]("/api/news/like/".concat(id));
+                return _this2.$store.dispatch("like/likeChange", data);
 
               case 2:
-                response = _context2.sent;
-
-                if (!(response.status !== _util__WEBPACK_IMPORTED_MODULE_1__["OK"])) {
-                  _context2.next = 6;
-                  break;
-                }
-
-                _this2.$store.commit("error/setCode", response.status);
-
-                return _context2.abrupt("return", false);
-
-              case 6:
-                _this2.news_arr = _this2.news_arr.map(function (news) {
-                  if (news.id == response.data.news_id) {
-                    news.likes_count -= 1;
-                    news.liked_by_user = false;
-                  }
-
-                  return news;
-                });
-
-              case 7:
               case "end":
                 return _context2.stop();
             }
           }
         }, _callee2);
       }))();
-    },
-    list: function list() {
-      var _this3 = this;
-
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
-        var response;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
-          while (1) {
-            switch (_context3.prev = _context3.next) {
-              case 0:
-                _context3.next = 2;
-                return axios.get("/api/index?page=".concat(_this3.page));
-
-              case 2:
-                response = _context3.sent;
-
-                if (!(response.status !== _util__WEBPACK_IMPORTED_MODULE_1__["OK"])) {
-                  _context3.next = 6;
-                  break;
-                }
-
-                _this3.$store.commit("error/setCode", response.status);
-
-                return _context3.abrupt("return", false);
-
-              case 6:
-                _this3.news_arr = response.data.data;
-                _this3.items = response.data;
-
-              case 8:
-              case "end":
-                return _context3.stop();
-            }
-          }
-        }, _callee3);
-      }))();
     }
   },
   created: function created() {
-    this.list();
+    this.init();
   },
   watch: {
     $route: {
       handler: function handler() {
-        var _this4 = this;
+        var _this3 = this;
 
-        return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4() {
-          return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
+        return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
+          return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
             while (1) {
-              switch (_context4.prev = _context4.next) {
+              switch (_context3.prev = _context3.next) {
                 case 0:
-                  _context4.next = 2;
-                  return _this4.list();
+                  _context3.next = 2;
+                  return _this3.init();
 
                 case 2:
                 case "end":
-                  return _context4.stop();
+                  return _context3.stop();
               }
             }
-          }, _callee4);
+          }, _callee3);
         }))();
       },
       immediate: true
@@ -26852,7 +26779,7 @@ var render = function() {
         return _c("NewsBlock", {
           key: news.id,
           attrs: { news: news },
-          on: { like: _vm.onLikeClick }
+          on: { like: _vm.likeChange }
         })
       }),
       _vm._v(" "),
@@ -47396,9 +47323,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
 /* harmony import */ var _auth__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./auth */ "./resources/js/index/store/auth.js");
-/* harmony import */ var _categorys__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./categorys */ "./resources/js/index/store/categorys.js");
-/* harmony import */ var _error__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./error */ "./resources/js/index/store/error.js");
-/* harmony import */ var _message__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./message */ "./resources/js/index/store/message.js");
+/* harmony import */ var _like__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./like */ "./resources/js/index/store/like.js");
+/* harmony import */ var _categorys__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./categorys */ "./resources/js/index/store/categorys.js");
+/* harmony import */ var _error__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./error */ "./resources/js/index/store/error.js");
+/* harmony import */ var _message__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./message */ "./resources/js/index/store/message.js");
+
 
 
 
@@ -47409,12 +47338,153 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
 var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
   modules: {
     auth: _auth__WEBPACK_IMPORTED_MODULE_2__["default"],
-    categorys: _categorys__WEBPACK_IMPORTED_MODULE_3__["default"],
-    error: _error__WEBPACK_IMPORTED_MODULE_4__["default"],
-    message: _message__WEBPACK_IMPORTED_MODULE_5__["default"]
+    like: _like__WEBPACK_IMPORTED_MODULE_3__["default"],
+    categorys: _categorys__WEBPACK_IMPORTED_MODULE_4__["default"],
+    error: _error__WEBPACK_IMPORTED_MODULE_5__["default"],
+    message: _message__WEBPACK_IMPORTED_MODULE_6__["default"]
   }
 });
 /* harmony default export */ __webpack_exports__["default"] = (store);
+
+/***/ }),
+
+/***/ "./resources/js/index/store/like.js":
+/*!******************************************!*\
+  !*** ./resources/js/index/store/like.js ***!
+  \******************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../util */ "./resources/js/index/util.js");
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+
+var state = {
+  news: null
+};
+var getters = {
+  news: function news(state) {
+    return !!state.news;
+  }
+};
+var mutations = {
+  setNews: function setNews(state, news) {
+    state.news = news;
+  }
+};
+var actions = {
+  likeChange: function likeChange(context, data) {
+    if (!context.rootGetters["auth/check"]) {
+      alert("いいね機能を使うにはログインしてください。");
+      return false;
+    }
+
+    if (data.liked) {
+      context.dispatch('unlike', data.id);
+    } else {
+      context.dispatch('like', data.id);
+    }
+  },
+  like: function like(context, id) {
+    return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+      var response, news;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _context.next = 2;
+              return axios.put("/api/news/like/".concat(id));
+
+            case 2:
+              response = _context.sent;
+
+              if (!(response.status !== _util__WEBPACK_IMPORTED_MODULE_1__["OK"])) {
+                _context.next = 6;
+                break;
+              }
+
+              context.commit("error/setCode", response.status, {
+                root: true
+              });
+              return _context.abrupt("return", false);
+
+            case 6:
+              news = state.news.map(function (news) {
+                if (news.id == response.data.news_id) {
+                  news.likes_count += 1;
+                  news.liked_by_user = true;
+                }
+
+                return news;
+              });
+              context.commit('setNews', news);
+
+            case 8:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee);
+    }))();
+  },
+  unlike: function unlike(context, id) {
+    return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+      var response, news;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.next = 2;
+              return axios["delete"]("/api/news/like/".concat(id));
+
+            case 2:
+              response = _context2.sent;
+
+              if (!(response.status !== _util__WEBPACK_IMPORTED_MODULE_1__["OK"])) {
+                _context2.next = 6;
+                break;
+              }
+
+              context.commit("error/setCode", response.status, {
+                root: true
+              });
+              return _context2.abrupt("return", false);
+
+            case 6:
+              news = state.news.map(function (news) {
+                if (news.id == response.data.news_id) {
+                  news.likes_count -= 1;
+                  news.liked_by_user = false;
+                }
+
+                return news;
+              });
+              context.commit('setNews', news);
+
+            case 8:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2);
+    }))();
+  }
+};
+/* harmony default export */ __webpack_exports__["default"] = ({
+  namespaced: true,
+  state: state,
+  getters: getters,
+  mutations: mutations,
+  actions: actions
+});
 
 /***/ }),
 
