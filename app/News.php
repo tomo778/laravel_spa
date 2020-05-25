@@ -27,26 +27,30 @@ class News extends Model
         'likes_count', 'liked_by_user',
     ];
 
-    public function category_rel(): \Illuminate\Database\Eloquent\Relations\hasMany
-    {
+    public function category_rel(): \Illuminate\Database\Eloquent\Relations\hasMany{
+
+
         return $this->hasMany(CategoryRel::class);
     }
 
     public function add_category(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
+
+
+
         return $this->belongsToMany(
             Category::class,
             CategoryRel::class,
         );
     }
 
-    public function likes(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
-    {
-        return $this->belongsToMany(
-            User::class,
-            Likes::class
-        )->withTimestamps();
-    }
+public function likes(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+{
+    return $this->belongsToMany(
+        User::class,
+        Likes::class
+    )->withTimestamps();
+}
 
     public function getLikesCountAttribute(): int
     {
