@@ -99,18 +99,16 @@ export default {
       });
     },
     async validation(mode) {
-      this.$store.commit("loading/setLoading", true);
+      this.$store.commit("loadingBar/start");
       const response = await axios.post(
         `/api/admin/category/validation`,
         this.registerForm
       );
-      this.$store.commit("loading/setLoading", false);
+      this.$store.commit("loadingBar/stop");
       if (response.status !== OK) {
         this.registerErrors = response.data.errors;
         this.$store.commit("error/setCode", response.status);
-        this.$store.commit("message/setContent", {
-          content: MESSAGE_ERR
-        });
+        this.$store.dispatch("flashMessage/showFlashMessage", MESSAGE_ERR);
         return false;
       }
       this.clearError();
@@ -118,7 +116,7 @@ export default {
     },
     async register() {
       this.$modal.hide("dialog");
-      this.$store.commit("loading/setLoading", true);
+      this.$store.commit("loadingBar/start");
       const response = await axios.post(
         `/api/admin/category/register`,
         this.registerForm
@@ -127,26 +125,22 @@ export default {
         this.$store.commit("error/setCode", response.status);
         return false;
       }
-      this.$store.commit("message/setContent", {
-        content: MESSAGE_CREATE
-      });
+      this.$store.dispatch("flashMessage/showFlashMessage", MESSAGE_CREATE);
       this.$router.push(`/admin/category/edit/${response.data}`);
     },
     async update() {
       this.$modal.hide("dialog");
-      this.$store.commit("loading/setLoading", true);
+      this.$store.commit("loadingBar/start");
       const response = await axios.post(
         `/api/admin/category/update`,
         this.registerForm
       );
-      this.$store.commit("loading/setLoading", false);
+      this.$store.commit("loadingBar/stop");
       if (response.status !== OK) {
         this.$store.commit("error/setCode", response.status);
         return false;
       }
-      this.$store.commit("message/setContent", {
-        content: MESSAGE_UPDATE
-      });
+      this.$store.dispatch("flashMessage/showFlashMessage", MESSAGE_UPDATE);
     },
     async init() {
       this.clearError();
@@ -155,12 +149,11 @@ export default {
         this.registerForm = [];
         return false;
       }
-      this.$store.commit("loading/setLoading", true);
+      this.$store.commit("loadingBar/start");
       const response = await axios.post(
         `/api/admin/category/detail/${this.id}`
       );
-      this.$store.commit("loading/setLoading", false);
-
+      this.$store.commit("loadingBar/stop");
       if (response.status !== OK) {
         this.$store.commit("error/setCode", response.status);
         return false;

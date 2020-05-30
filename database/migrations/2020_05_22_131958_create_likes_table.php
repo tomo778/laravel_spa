@@ -19,7 +19,7 @@ class CreateLikesTable extends Migration
             $table->bigInteger('user_id')->unsigned();
             $table->timestamps();
     
-            $table->foreign('news_id')->references('id')->on('news');
+            $table->foreign('news_id')->references('id')->on('news')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users');
         });
     }

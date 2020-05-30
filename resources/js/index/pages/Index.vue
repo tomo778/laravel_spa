@@ -1,6 +1,6 @@
 <template>
   <div class="col-md-8 blog-main">
-    <NewsBlock v-for="news in news_arr" :key="news.id" :news="news" @like="likeChange"/>
+    <NewsBlock v-for="news in news_arr" :key="news.id" :news="news"/>
     <Pagination :data="items"></Pagination>
   </div>
 </template>
@@ -23,9 +23,6 @@ export default {
       ]
     };
   },
-  computed: mapState({
-    news_arr: state => state.like.news
-  }),
   components: {
     Pagination,
     NewsBlock
@@ -33,7 +30,7 @@ export default {
   props: {
     page: {
       type: Number,
-      required: true,
+      required: false,
       default: 1
     }
   },
@@ -42,20 +39,9 @@ export default {
       items: [],
     };
   },
-  methods: {
-    async init() {
-      const response = await axios.get(`/api/index?page=${this.page}`);
-      if (response.status !== OK) {
-        this.$store.commit("error/setCode", response.status);
-        return false;
-      }
-      this.$store.commit("like/setNews", response.data.data);
-      this.items = response.data;
-    },
-    async likeChange(data) {
-      await this.$store.dispatch("like/likeChange", data);
-    },
-  },
+  computed: mapState({
+    news_arr: state => state.like.news
+  }),
   created() {
     this.init();
   },
@@ -66,6 +52,19 @@ export default {
       },
       immediate: true
     }
-  }
+  },
+  methods: {
+    async init() {
+      this.$store.commit("loadingBar/start");
+      const response = await axios.get(`/api/index?page=${this.page}`);
+      this.$store.commit("loadingBar/stop");
+      if (response.status !== OK) {
+        this.$store.commit("error/setCode", response.status);
+        return false;
+      }
+      this.$store.commit("like/setNews", response.data.data);
+      this.items = response.data;
+    },
+  },
 };
 </script>

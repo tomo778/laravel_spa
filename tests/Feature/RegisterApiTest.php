@@ -14,10 +14,10 @@ class RegisterApiTest extends TestCase
     /**
      * @test
      */
-    public function should_新しいユーザーを作成して返却する()
+    public function should_フロント側ユーザーを作成()
     {
         $data = [
-            'name' => 'vuesplash user',
+            'name' => 'user1',
             'email' => 'dummy@email.com',
             'password' => 'test1234',
             'password_confirmation' => 'test1234',

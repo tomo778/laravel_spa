@@ -40,6 +40,7 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
+        //usleep(500000);
         $this->middleware('guest');
     }
 

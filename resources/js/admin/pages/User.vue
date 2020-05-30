@@ -27,14 +27,11 @@
         </tbody>
       </table>
     </div>
-    <loading :active.sync="isLoading" :can-cancel="true" :is-full-page="fullPage"></loading>
   </main>
 </template>
 
 <script>
 import { OK, STATUS, MESSAGE_UPDATE } from "../util";
-import Loading from "vue-loading-overlay";
-import "vue-loading-overlay/dist/vue-loading.css";
 import moment from "moment";
 
 export default {
@@ -44,14 +41,9 @@ export default {
       return moment(date).format("LLL");
     }
   },
-  components: {
-    Loading
-  },
   data() {
     return {
-      user_arr: [],
-      isLoading: false,
-      fullPage: true,
+      user_arr: []
     };
   },
   created() {
@@ -59,16 +51,14 @@ export default {
   },
   methods: {
     async list() {
-      this.isLoading = true;
-      const response = await axios.post(
-        `/api/admin/user/list2`
-      );
+      this.$store.commit("loadingBar/start");
+      const response = await axios.post(`/api/admin/user/list2`);
+      this.$store.commit("loadingBar/stop");
       if (response.status !== OK) {
         this.$store.commit("error/setCode", response.status);
         return false;
       }
       this.user_arr = response.data.data;
-      this.isLoading = false;
     }
   }
 };

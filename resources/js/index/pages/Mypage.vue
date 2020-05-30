@@ -19,14 +19,16 @@ export default {
       apiStatus: state => state.auth.apiStatus
     }),
   },
+  created() {
+    this.init();
+  },
   methods: {
     async init() {
+      this.$store.commit("loadingBar/start");
       await this.$store.dispatch("auth/currentUser");
+      this.$store.commit("loadingBar/stop");
       this.username = this.$store.getters["auth/username"];
     }
   },
-  created() {
-    this.init();
-  }
 };
 </script>

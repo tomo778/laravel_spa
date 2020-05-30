@@ -1,10 +1,10 @@
 const state = {
   content: '',
-  type:''
+  type: ''
 }
 
 const mutations = {
-  setContent (state, { content, timeout }) {
+  setContent(state, { content, timeout }) {
     state.content = content.mes
     state.type = content.type
 
@@ -13,6 +13,7 @@ const mutations = {
     }
 
     setTimeout(() => (state.content = ''), timeout)
+
   }
 }
 

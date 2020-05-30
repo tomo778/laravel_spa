@@ -17,8 +17,8 @@ class CreateCategoryRelTable extends Migration
             $table->increments('id');
             $table->integer('news_id')->unsigned();
             $table->integer('category_id')->unsigned();
-            $table->foreign('news_id')->references('id')->on('news');
-            $table->foreign('category_id')->references('id')->on('category');
+            $table->foreign('news_id')->references('id')->on('news')->onDelete('cascade');
+            $table->foreign('category_id')->references('id')->on('category')->onDelete('cascade');
             $table->timestamps();
 
 

@@ -10,25 +10,8 @@
         <br />
         更新：{{ detail.updated_at | moment_format("LLL")}}
       </p>
-      <button
-        v-if="!detail.liked_by_user"
-        @click.prevent="onLikeClick(false)"
-        type="button"
-        class="btn btn-secondary btn-sm"
-      >
-        お気に入り登録
-        <span class="badge badge-light">{{ detail.likes_count }}</span>
-      </button>
-      <button
-        v-if="detail.liked_by_user"
-        @click.prevent="onLikeClick(true)"
-        type="button"
-        class="btn btn-primary btn-sm"
-      >
-        お気に入り解除
-        <span class="badge badge-light">{{ detail.likes_count }}</span>
-      </button>
-      <hr>
+      <Likebtn :news="detail" v-bind:detail="true"/>
+      <hr />
       <p style="white-space: pre-wrap;" v-text="detail.text"></p>
     </div>
   </div>
@@ -36,13 +19,18 @@
 
 <script>
 import { OK, NOT_FOUND } from "../util";
+import Likebtn from "../components/Likebtn.vue";
+import { mapState } from "vuex";
 
 export default {
   metaInfo() {
     return {
-      title: this.detail.title,
+      title: 11,
       titleTemplate: "%s - sitetitle"
     };
+  },
+  components: {
+    Likebtn
   },
   props: {
     id: {
@@ -50,16 +38,17 @@ export default {
       required: false
     }
   },
-  data() {
-    return {
-      isLoading: false,
-      fullPage: true,
-      detail: []
-    };
+  computed: mapState({
+    detail: state => state.like.detail
+  }),
+  created() {
+    this.init();
   },
   methods: {
     async init() {
+      this.$store.commit("loadingBar/start");
       const response = await axios.post(`/api/detail?id=${this.id}`);
+      this.$store.commit("loadingBar/stop");
       if (response.status !== OK) {
         this.$store.commit("error/setCode", response.status);
         return false;
@@ -68,40 +57,8 @@ export default {
         this.$store.commit("error/setCode", NOT_FOUND);
         return false;
       }
-      this.detail = response.data;
-    },
-    onLikeClick(liked) {
-      if (!this.$store.getters["auth/check"]) {
-        alert("いいね機能を使うにはログインしてください。");
-        return false;
-      }
-      if (liked) {
-        this.unlike();
-      } else {
-        this.like();
-      }
-    },
-    async like() {
-      const response = await axios.put(`/api/news/like/${this.detail.id}`);
-      if (response.status !== OK) {
-        this.$store.commit("error/setCode", response.status);
-        return false;
-      }
-      this.detail.likes_count += 1;
-      this.detail.liked_by_user = true;
-    },
-    async unlike(id) {
-      const response = await axios.delete(`/api/news/like/${this.detail.id}`);
-      if (response.status !== OK) {
-        this.$store.commit("error/setCode", response.status);
-        return false;
-      }
-      this.detail.likes_count -= 1;
-      this.detail.liked_by_user = false;
+      this.$store.commit("like/setDetail", response.data);
     }
   },
-  created() {
-    this.init();
-  }
 };
 </script>

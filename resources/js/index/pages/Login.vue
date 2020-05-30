@@ -10,19 +10,12 @@
         id="email"
         placeholder="you@example.com"
       />
+      <ErrMessage :Errors="loginErrors" :name="'email'"/>
     </div>
     <div class="mb-3">
       <label for="password">パスワード</label>
       <input type="password" class="form-control" id="password" v-model="loginForm.password" />
-    </div>
-    <hr class="mb-4" />
-    <div v-if="loginErrors" class="errors">
-      <ul v-if="loginErrors.email">
-        <li v-for="msg in loginErrors.email" :key="msg">{{ msg }}</li>
-      </ul>
-      <ul v-if="loginErrors.password">
-        <li v-for="msg in loginErrors.password" :key="msg">{{ msg }}</li>
-      </ul>
+      <ErrMessage :Errors="loginErrors" :name="'password'"/>
     </div>
     <button class="btn btn-primary btn-lg btn-block" v-on:click="login">ログイン</button>
   </div>
@@ -31,8 +24,12 @@
 <script>
 import { OK } from "../util";
 import { mapState } from "vuex";
+import ErrMessage from "../components/ErrMessage.vue";
 
 export default {
+  components: {
+    ErrMessage
+  },
   data() {
     return {
       loginForm: {
@@ -45,13 +42,15 @@ export default {
     apiStatus: state => state.auth.apiStatus,
     loginErrors: state => state.auth.loginErrorMessages
   }),
+  created() {
+    this.clearError();
+  },
   methods: {
     async login() {
-      // authストアのloginアクションを呼び出す
+      this.$store.commit("loadingBar/start");
       await this.$store.dispatch("auth/login", this.loginForm);
-
+      this.$store.commit("loadingBar/stop");
       if (this.apiStatus) {
-        // トップページに移動する
         this.$router.push("/");
       }
     },
@@ -59,8 +58,5 @@ export default {
       this.$store.commit("auth/setLoginErrorMessages", null);
     }
   },
-  created() {
-    this.clearError();
-  }
 };
 </script>

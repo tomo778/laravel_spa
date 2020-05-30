@@ -70,19 +70,15 @@ export default {
     },
     async update() {
       this.$modal.hide("dialog");
-      this.$store.commit("loading/setLoading", true);
+      this.$store.commit("loadingBar/start");
       const response = await axios.post(`/api/admin/category/sort`, this.lists);
-      this.$store.commit("loading/setLoading", false);
+      this.$store.commit("loadingBar/stop");
       if (response.status !== OK) {
         this.$store.commit("error/setCode", response.status);
-        this.$store.commit("message/setContent", {
-          content: MESSAGE_ERR
-        });
+        this.$store.dispatch("flashMessage/showFlashMessage", MESSAGE_ERR);
         return false;
       } else {
-        this.$store.commit("message/setContent", {
-          content: MESSAGE_UPDATE
-        });
+        this.$store.dispatch("flashMessage/showFlashMessage", MESSAGE_UPDATE);
       }
     },
     dragList(event, dragIndex) {
@@ -99,14 +95,14 @@ export default {
       });
     },
     async init() {
-      this.$store.commit("loading/setLoading", true);
+      this.$store.commit("loadingBar/start");
       const response2 = await axios.post(`/api/admin/category`);
       if (response2.status !== OK) {
         this.$store.commit("error/setCode", response2.status);
         return false;
       }
       this.lists = response2.data;
-      this.$store.commit("loading/setLoading", false);
+      this.$store.commit("loadingBar/stop");
     }
   },
   created() {

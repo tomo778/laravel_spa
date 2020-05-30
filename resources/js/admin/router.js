@@ -5,8 +5,11 @@ import Login from './pages/Login.vue'
 import AdminTop from './pages/Top.vue'
 import AdminStaff from './pages/Staff.vue'
 import AdminStaffEdit from './pages/StaffEdit.vue'
-import AdminNews from './pages/News.vue'
-import AdminNewsEdit from './pages/NewsEdit.vue'
+import News from './pages/news/List.vue'
+//import AdminNewsEdit from './pages/NewsEdit.vue'
+import NewsRegister from './pages/news/Register.vue'
+import NewsUpdate from './pages/news/Update.vue'
+
 import AdminCategory from './pages/Category.vue'
 import AdminCategoryEdit from './pages/CategoryEdit.vue'
 import AdminCategorySort from './pages/CategorySort.vue'
@@ -45,22 +48,22 @@ const routes = [
   },
   {
     path: '/admin/news',
-    component: AdminNews,
+    component: News,
     props: route => {
       return {
-        page: Number(route.query.p)
+        page: route.query.p
       }
     },
     meta: { requiresAuth: true }
   },
   {
     path: '/admin/news/edit',
-    component: AdminNewsEdit,
+    component: NewsRegister,
     meta: { requiresAuth: true }
   },
   {
     path: '/admin/news/edit/:id',
-    component: AdminNewsEdit,
+    component: NewsUpdate,
     props: true,
     meta: { requiresAuth: true }
   },

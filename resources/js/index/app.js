@@ -2,9 +2,8 @@ import './bootstrap'
 import Vue from 'vue'
 import VueMeta from 'vue-meta'
 Vue.use(VueMeta, {
-  // optional pluginOptions
-  refreshOnceOnNavigation: true
-})
+    refreshOnceOnNavigation: true
+});
 import VModal from 'vue-js-modal'
 Vue.use(VModal)
 import router from './router'

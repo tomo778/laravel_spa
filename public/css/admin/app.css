@@ -10892,6 +10892,15 @@ body,
   font-family: "Hiragino Kaku Gothic Pro", "\30D2\30E9\30AE\30CE\89D2\30B4   Pro W3", "\30E1\30A4\30EA\30AA", Meiryo, "\FF2D\FF33   \FF30\30B4\30B7\30C3\30AF", sans-serif;
 }
 
+.admin-table {
+  margin-bottom: 5rem !important;
+}
+
+.admin-table tr th,
+.sarch-table tr th {
+  width: 200px;
+}
+
 #login,
 body,
 html {

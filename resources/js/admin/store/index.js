@@ -5,6 +5,8 @@ import auth from './auth'
 import categorys from './categorys'
 import config from './config'
 import loading from './loading'
+import loadingBar from './loadingBar'
+import flashMessage from './flashMessage'
 import error from './error'
 import message from './message'
 
@@ -16,6 +18,8 @@ const store = new Vuex.Store({
     categorys,
     config,
     loading,
+    loadingBar,
+    flashMessage,
     error,
     message
   }

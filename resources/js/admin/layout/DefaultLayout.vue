@@ -1,5 +1,7 @@
 <template>
   <div>
+    <FlashMessage />
+    <LoadingBar />
     <a id="skippy" class="sr-only sr-only-focusable" href="#content">
       <div class="container">
         <span class="skiplink-text">Skip to main content</span>
@@ -12,17 +14,14 @@
         <RouterView />
       </div>
     </div>
-    <Message />
-    <Loading />
   </div>
 </template>
 
 <script>
 import Navbar from "../components/Navbar.vue";
-import Footer from "../components/Footer.vue";
-import Message from "../components/Message.vue";
+import FlashMessage from "../components/FlashMessage.vue";
 import SideNav from "../components/SideNav.vue";
-import Loading from "../components/Loading.vue";
+import LoadingBar from "../components/LoadingBar.vue";
 
 import { NOT_FOUND, UNAUTHORIZED, INTERNAL_SERVER_ERROR } from "../util";
 import feather from "feather-icons";
@@ -30,10 +29,9 @@ import feather from "feather-icons";
 export default {
   components: {
     SideNav,
-    Message,
+    FlashMessage,
     Navbar,
-    Footer,
-    Loading
+    LoadingBar
   },
   metaInfo: {
     link: [{ rel: "stylesheet", href: "/css/app.css" }],

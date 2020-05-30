@@ -15,63 +15,62 @@
         </button>
       </div>
     </div>
-    <div class="form-row">
-      <div class="col-md-7 mb-3">
-        <label for="validationTooltip03">フリーワード検索</label>
-        <input
-          type="text"
-          v-model="searchForm.freeword"
-          class="form-control"
-          placeholder="スペース区切りで検索できます（enterで検索）"
-          required
-          @keydown.enter="sarch"
-        />
-        <br />
-        <label for="validationTooltip03">公開状態</label>
-        <div>
-          <div class="custom-control custom-radio">
+    <table class="table border-bottom sarch-table">
+      <tr>
+        <th>フリーワード検索</th>
+        <td>
+          <input
+            type="text"
+            v-model="searchForm.freeword"
+            class="form-control"
+            placeholder="スペース区切りで検索できます（enterで検索）"
+            required
+            @keydown.enter="sarch"
+          />
+        </td>
+      </tr>
+      <tr>
+        <th>公開状態</th>
+        <td>
+          <div>
             <input
               type="radio"
               v-bind:value="0"
               v-model="searchForm.status"
               id="all"
-              name="customRadio"
-              class="custom-control-input"
               checked
               v-on:change="sarch"
             />
-            <label class="custom-control-label" for="all">すべて</label>
+            <label for="all">すべて</label>
           </div>
-        </div>
-        <div v-for="(item, index) in config.array_status" :key="index">
-          <div class="custom-control custom-radio">
+          <div v-for="(item, index) in config.array_status" :key="index">
             <input
               type="radio"
               v-bind:value="index"
               v-model="searchForm.status"
               :id="index"
-              name="customRadio"
-              class="custom-control-input"
               v-on:change="sarch"
             />
-            <label class="custom-control-label" :for="index">{{item}}</label>
+            <label :for="index">{{item}}</label>
           </div>
-        </div>
-      </div>
-    </div>
-    <!-- </form> -->
-    <hr />
-    <div v-if="items.total == 0">
+        </td>
+      </tr>
+    </table>
+    <div v-if="pagination.total == 0">
       <p>条件にあうデータはありませんでした。</p>
     </div>
-    <div v-if="items.total != 0">
-      <Pagination :data="items"></Pagination>
+    <div v-if="pagination.total != 0">
+      <Pagination :data="pagination"></Pagination>
       <div class="form-row">
         <div class="form-group col-md-2">
           <label for="inputState">チェックボックス操作</label>
           <select v-model="selected" @change="selectbox" id="inputState" class="form-control">
             <option value></option>
-            <option v-for="(item, index) in config.array_status" :key="index" v-bind:value="index">{{item}}にする</option>
+            <option
+              v-for="(item, index) in config.array_status"
+              :key="index"
+              v-bind:value="index"
+            >{{item}}にする</option>
             <option disabled>-----------</option>
             <option value="9">削除する</option>
           </select>
@@ -83,7 +82,7 @@
         <table class="table">
           <thead>
             <tr>
-              <th width="50">
+              <th>
                 <input
                   type="checkbox"
                   id="checked_one"
@@ -91,41 +90,49 @@
                   @click="selectAllCats"
                 />
               </th>
-              <th width="50">id</th>
-              <th width="100">状態</th>
+              <th>id</th>
+              <th>状態</th>
               <th>タイトル</th>
               <th>本文</th>
               <th>カテゴリ</th>
-              <th width="50"></th>
+              <th></th>
             </tr>
           </thead>
-          <tbody v-for="news in news_arr" :key="news.id">
+          <tbody v-for="news in result" :key="news.id">
             <tr>
-              <th>
+              <th width="100">
                 <input type="checkbox" :value="news.id" id="checkbox" v-model="selectedCatIds" />
-                <!-- <input type="checkbox" v-model="selectedCatIds" :value="news.id" @click="select" /> -->
               </th>
-              <td>{{ news.id }}</td>
-              <td>
-                <span v-if="news.status == config.STATUS_ON" class="badge badge-primary">{{ config.array_status[news.status] }}</span>
+              <td width="100">{{ news.id }}</td>
+              <td width="100">
+                <span
+                  v-if="news.status == config.STATUS_ON"
+                  class="badge badge-primary"
+                >{{ config.array_status[news.status] }}</span>
                 <span
                   v-if="news.status == config.STATUS_OFF"
                   class="badge badge-secondary"
                 >{{ config.array_status[news.status] }}</span>
               </td>
-              <td>{{ news.title }}</td>
-              <td>{{ news.text}}</td>
-              <td>
-                <div v-for="news in news.add_category" :key="news.id">{{news.title}}<hr></div>
+              <td width="200">{{ news.title }}</td>
+              <td width="1500">{{ news.text}}</td>
+              <td width="200">
+                <div v-for="news in news.add_category" :key="news.id">
+                  {{news.title}}
+                  <hr />
+                </div>
               </td>
-              <td>
-                <RouterLink class="btn btn-primary text-nowrap" :to="`/admin/news/edit/${news.id}`">更新</RouterLink>
+              <td width="100">
+                <RouterLink
+                  class="btn btn-primary text-nowrap"
+                  :to="`/admin/news/edit/${news.id}`"
+                >更新</RouterLink>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
-      <Pagination :data="items"></Pagination>
+      <Pagination :data="pagination"></Pagination>
     </div>
   </main>
 </template>
@@ -134,6 +141,7 @@
 <script>
 import { OK, MESSAGE_UPDATE } from "../util";
 import Pagination from "../components/Pagination.vue";
+import SelectMixin from "../mixins/SelectMixin";
 
 export default {
   components: {
@@ -141,110 +149,25 @@ export default {
   },
   props: {
     page: {
-      type: Number,
+      type: String,
       required: false,
-      default: 1
+      default: "1"
     }
   },
   data() {
     return {
-      items: [],
-      freeword: "",
+      pluginName: "news",
+      pagination: [],
       selected: [],
       isAllSelected: false,
       selectedCatIds: [],
-      laravelData: {},
-      news_arr: [],
-      config:[],
-      currentPage: 0,
-      lastPage: 0,
-      fullPage: true,
+      result: [],
+      config: [],
       searchForm: {
         status: "0",
         freeword: ""
       }
     };
-  },
-  // mounted() {
-  //   // Fetch initial results
-  //   this.init();
-  // },
-  methods: {
-    async init() {
-      this.config = this.$store.getters["config/config"];
-      this.$store.commit("loading/setLoading", true);
-      const response = await axios.post(
-        `/api/admin/news/sarch?page=${this.page}`,
-        this.searchForm
-      );
-      if (response.status !== OK) {
-        this.$store.commit("error/setCode", response.status);
-        return false;
-      }
-      this.items = response.data;
-      this.news_arr = response.data.data;
-      this.$store.commit("loading/setLoading", false);
-    },
-    async sarch() {
-      this.$store.commit("loading/setLoading", true);
-      const response = await axios.post(
-        `/api/admin/news/sarch?page=` + 1,
-        this.searchForm
-      );
-      if (response.status !== OK) {
-        this.$store.commit("error/setCode", response.status);
-        return false;
-      }
-      this.items = response.data;
-      this.news_arr = response.data.data;
-      this.$store.commit("loading/setLoading", false);
-      //this.$router.push("/admin/news");
-    },
-    selectAllCats() {
-      if (this.isAllSelected) {
-        this.selectedCatIds = [];
-        this.isAllSelected = false;
-      } else {
-        this.selectedCatIds = [];
-        for (var cat in this.news_arr) {
-          this.selectedCatIds.push(this.news_arr[cat].id);
-        }
-        this.isAllSelected = true;
-      }
-    },
-    select() {
-      if (this.selectedCatIds.length !== this.news_arr.length) {
-        this.isAllSelected = false;
-      } else {
-        this.isAllSelected = true;
-      }
-    },
-
-    async selectbox() {
-      if (!confirm("本当にいいですか？")) {
-        this.selected = "";
-        return;
-      }
-      const response = await axios.post("/api/admin/news/selectbox", {
-        mode: this.selected,
-        vals: this.selectedCatIds
-      });
-      if (response.status !== OK) {
-        this.$store.commit("error/setCode", response.status);
-        return false;
-      }
-      // authストアのloginアクションを呼び出す
-      await this.$store.dispatch("categorys/categorys");
-      //
-      this.selected = "";
-      this.init();
-      this.$store.commit("message/setContent", {
-        content: MESSAGE_UPDATE
-      });
-    }
-  },
-  created() {
-    this.init();
   },
   watch: {
     $route: {
@@ -253,6 +176,47 @@ export default {
       },
       immediate: true
     }
-  }
+  },
+  created() {
+    this.init();
+  },
+  methods: {
+    init() {
+      this.config = this.$store.getters["config/config"];
+      this.sarch();
+    },
+    async sarch() {
+      this.$store.commit("loadingBar/start");
+      let response = await axios.post(
+        `/api/admin/${this.pluginName}/sarch?page=${this.page}`,
+        this.searchForm
+      );
+      if (response.status !== OK) {
+        this.$store.commit("error/setCode", response.status);
+        return false;
+      }
+      //page=1以外の時検索され、データが0の場合
+      //page=1に戻す
+      if (response.data.data.length == 0) {
+        response = await axios.post(
+          `/api/admin/${this.pluginName}/sarch?page=1`,
+          this.searchForm
+        );
+        if (response.status !== OK) {
+          this.$store.commit("error/setCode", response.status);
+          return false;
+        }
+      }
+      //
+      this.selectedCatIds = [];
+      this.isAllSelected = false;
+      this.selected = "";
+      //
+      this.pagination = response.data;
+      this.result = response.data.data;
+      this.$store.commit("loadingBar/stop");
+    }
+  },
+  mixins: [SelectMixin]
 };
 </script>

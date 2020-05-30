@@ -11,27 +11,17 @@
     </p>
     <p>{{ news.text | truncate(100, '...')}}</p>
     <RouterLink class="btn btn-primary btn-sm" :to="`/detail/${news.id}`">詳細へ</RouterLink>
-      <button v-if="!news.liked_by_user" @click.prevent="like" type="button" class="btn btn-secondary btn-sm">
-        お気に入り登録
-        <span class="badge badge-light">{{ news.likes_count }}</span>
-      </button>
-      <button v-if="news.liked_by_user" @click.prevent="like" type="button" class="btn btn-primary btn-sm">
-        お気に入り解除
-        <span class="badge badge-light">{{ news.likes_count }}</span>
-      </button>
+    <Likebtn :news="news"/>
     <hr />
   </div>
 </template>
 
 <script>
+import Likebtn from "../components/Likebtn.vue";
+
 export default {
-  methods: {
-    like() {
-      this.$emit("like", {
-        id: this.news.id,
-        liked: this.news.liked_by_user
-      });
-    }
+  components: {
+    Likebtn
   },
   props: {
     news: {

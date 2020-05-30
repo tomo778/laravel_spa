@@ -4,15 +4,19 @@
 
 <script>
 import { NOT_FOUND, UNAUTHORIZED, INTERNAL_SERVER_ERROR } from "../util";
+import LoadingBar from "../components/LoadingBar.vue";
 
 export default {
+  components: {
+    LoadingBar
+  },
   computed: {
     errorCode() {
       return this.$store.state.error.code;
     }
   },
   metaInfo: {
-    title: "ログイン",
+    title: "ログイン"
     //titleTemplate: "%s - Yay!",
     //link: [{ rel: "stylesheet", href: "/css/login.css" }],
   },

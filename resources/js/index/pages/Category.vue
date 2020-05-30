@@ -4,7 +4,7 @@
     <p style="white-space: pre-wrap;" v-text="category.text"></p>
     <hr>
     <Pagination :data="items"></Pagination>
-    <NewsBlock v-for="news in news_arr" :key="news.id" :news="news" @like="onLikeClick" />
+    <NewsBlock v-for="news in news_arr" :key="news.id" :news="news" @like="likeChange"/>
     <Pagination :data="items"></Pagination>
   </div>
 </template>
@@ -13,6 +13,7 @@
 import { OK,NOT_FOUND } from "../util";
 import NewsBlock from "../components/NewsBlock.vue";
 import Pagination from "../components/Pagination.vue";
+import { mapState } from "vuex";
 
 export default {
   components: {
@@ -21,9 +22,9 @@ export default {
   },
   props: {
     page: {
-      type: Number,
+      type: String,
       required: true,
-      default: 1
+      default: '1'
     },
     id: {
       type: String,
@@ -34,56 +35,29 @@ export default {
     return {
       category: [],
       items: [],
-      news_arr: [],
     };
   },
+  computed: mapState({
+    news_arr: state => state.like.news
+  }),
+  watch: {
+    $route: {
+      async handler() {
+        await this.init();
+      },
+      immediate: true
+    }
+  },
   created() {
-    this.list();
+    this.init();
   },
   methods: {
-    onLikeClick({ id, liked }) {
-      if (!this.$store.getters["auth/check"]) {
-        alert("いいね機能を使うにはログインしてください。");
-        return false;
-      }
-      if (liked) {
-        this.unlike(id);
-      } else {
-        this.like(id);
-      }
-    },
-    async like(id) {
-      const response = await axios.put(`/api/news/like/${id}`);
-      if (response.status !== OK) {
-        this.$store.commit("error/setCode", response.status);
-        return false;
-      }
-      this.news_arr = this.news_arr.map(news => {
-        if (news.id == response.data.news_id) {
-          news.likes_count += 1;
-          news.liked_by_user = true;
-        }
-        return news;
-      });
-    },
-    async unlike(id) {
-      const response = await axios.delete(`/api/news/like/${id}`);
-      if (response.status !== OK) {
-        this.$store.commit("error/setCode", response.status);
-        return false;
-      }
-      this.news_arr = this.news_arr.map(news => {
-        if (news.id == response.data.news_id) {
-          news.likes_count -= 1;
-          news.liked_by_user = false;
-        }
-        return news;
-      });
-    },
-    async list() {
+    async init() {
+      this.$store.commit("loadingBar/start");
       const response = await axios.get(
         `/api/category?page=${this.page}&id=${this.id}`
       );
+      this.$store.commit("loadingBar/stop");
       if (response.status !== OK) {
         this.$store.commit("error/setCode", response.status);
         return false;
@@ -98,17 +72,12 @@ export default {
           this.category = e;
         }
       });
-      this.news_arr = response.data.data;
+      this.$store.commit("like/setNews", response.data.data);
       this.items = response.data;
+    },
+    async likeChange(data) {
+      await this.$store.dispatch("like/likeChange", data);
     }
   },
-  watch: {
-    $route: {
-      async handler() {
-        await this.list();
-      },
-      immediate: true
-    }
-  }
 };
 </script>

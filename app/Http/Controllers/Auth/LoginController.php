@@ -37,6 +37,7 @@ class LoginController extends Controller
      */
     public function __construct()
     {
+        //usleep(500000);
         $this->middleware('guest')->except('logout');
     }
 

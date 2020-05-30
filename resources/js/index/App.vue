@@ -1,13 +1,14 @@
 <template>
   <div>
-    <Header />
+    <LoadingBar />
+    <MainHeader />
     <main role="main" class="container my-5">
       <div class="row">
         <RouterView />
         <component v-bind:is="layout" />
       </div>
     </main>
-    <Footer />
+    <MainFooter />
     <Message />
   </div>
 </template>
@@ -15,12 +16,21 @@
 <script>
 import { NOT_FOUND, UNAUTHORIZED, INTERNAL_SERVER_ERROR, OK } from "./util";
 import SideNav from "./components/SideNav.vue";
-import Header from "./components/Header.vue";
-import Footer from "./components/Footer.vue";
+import MainHeader from "./components/MainHeader.vue";
+import MainFooter from "./components/MainFooter.vue";
 import MypageNav from "./components/MypageNav.vue";
 import Message from "./components/Message.vue";
+import LoadingBar from "./components/LoadingBar.vue";
 
 export default {
+  components: {
+    LoadingBar,
+    Message,
+    MypageNav,
+    SideNav,
+    MainHeader,
+    MainFooter
+  },
   computed: {
     layout: {
       cache: false,
@@ -31,13 +41,6 @@ export default {
     errorCode() {
       return this.$store.state.error.code;
     }
-  },
-  components: {
-    Message,
-    MypageNav,
-    SideNav,
-    Header,
-    Footer
   },
   watch: {
     errorCode: {

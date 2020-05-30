@@ -4,6 +4,7 @@ import Vuex from 'vuex'
 import auth from './auth'
 import like from './like'
 import categorys from './categorys'
+import loadingBar from './loadingBar'
 import error from './error'
 import message from './message'
 
@@ -14,6 +15,7 @@ const store = new Vuex.Store({
     auth,
     like,
     categorys,
+    loadingBar,
     error,
     message
   }

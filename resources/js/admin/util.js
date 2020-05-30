@@ -7,9 +7,12 @@ export const UNAUTHORIZED = 419
 export const NOT_FOUND = 404
 
 //メッセージ
-export const MESSAGE_ERR = { mes: "エラーの箇所があります！", type: 4, }
-export const MESSAGE_CREATE = { mes: "登録しました！", type: 1, }
-export const MESSAGE_UPDATE = { mes: "更新しました！", type: 2, }
+export const MESSAGE_ERR = { text: "エラーの箇所があります！", duration: 2000, mode: 'error' }
+export const MESSAGE_CREATE = { text: "登録しました！", duration: 3000, mode: 'processing' }
+export const MESSAGE_UPDATE = { text: "更新しました！", duration: 3000, mode: 'done' }
+export const MESSAGE_DELETE = { text: "削除しました！", duration: 3000, mode: 'done' }
+export const MESSAGE_LOGIN = { text: "ログインしました！", duration: 3000, mode: 'done' }
+
 
 // export const STATUS = {
 //   1: "公開",

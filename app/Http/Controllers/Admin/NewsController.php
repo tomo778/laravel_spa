@@ -53,6 +53,12 @@ class NewsController extends Controller
         return $news;
     }
 
+    public function delete(Request $request): \Illuminate\Http\Response
+    {
+        News::find($request->id)->delete();
+        return response(200);
+    }
+    
     public function sarch(Request $request): \Illuminate\Pagination\LengthAwarePaginator
     {
         $q = News::with('add_category');
@@ -74,7 +80,7 @@ class NewsController extends Controller
             $this->off($request);
         }
         if ($request->mode == config('const.STATUS_DELETE')) {
-            $this->delete($request);
+            $this->delete2($request);
         }
         return response(200);
     }
@@ -89,7 +95,7 @@ class NewsController extends Controller
         News::whereIn('id', $request->vals)->update(['status' => config('const.STATUS_OFF')]);
     }
 
-    private function delete(Request $request): void
+    private function delete2(Request $request): void
     {
         News::destroy($request->vals);
     }

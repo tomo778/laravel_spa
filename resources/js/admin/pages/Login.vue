@@ -1,5 +1,6 @@
 <template>
   <div id="login">
+    <LoadingBar />
     <form class="form-signin" @submit.prevent="login">
       <h1 class="h3 mb-3 font-weight-normal">ログイン</h1>
       <label for="inputEmail" class="sr-only">Email address</label>
@@ -10,6 +11,7 @@
         placeholder="Email address"
         v-model="loginForm.email"
       />
+      <ErrMessage :Errors="loginErrors" :name="'email'" />
       <label for="inputPassword" class="sr-only">Password</label>
       <input
         type="password"
@@ -18,14 +20,8 @@
         placeholder="Password"
         v-model="loginForm.password"
       />
-      <div v-if="loginErrors" class="errors">
-        <ul v-if="loginErrors.email">
-          <li v-for="msg in loginErrors.email" :key="msg">{{ msg }}</li>
-        </ul>
-        <ul v-if="loginErrors.password">
-          <li v-for="msg in loginErrors.password" :key="msg">{{ msg }}</li>
-        </ul>
-      </div>
+      <ErrMessage :Errors="loginErrors" :name="'password'" />
+
       <!-- <div class="checkbox mb-3">
         <label>
           <input type="checkbox" value="remember-me" /> Remember me
@@ -34,16 +30,19 @@
       <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
       <p class="mt-5 mb-3 text-muted">&copy; 2019</p>
     </form>
-    <Loading />
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
-import Loading from "../components/Loading.vue";
+import LoadingBar from "../components/LoadingBar.vue";
+import { MESSAGE_LOGIN } from "../util";
+import ErrMessage from "../components/ErrMessage.vue";
+
 export default {
   components: {
-    Loading
+    ErrMessage,
+    LoadingBar
   },
   data() {
     return {
@@ -59,12 +58,12 @@ export default {
   }),
   methods: {
     async login() {
-      this.$store.commit("loading/setLoading", true);
-      // authストアのloginアクションを呼び出す
+      this.$store.commit("loadingBar/start"); // authストアのloginアクションを呼び出す
       await this.$store.dispatch("auth/login", this.loginForm);
-      this.$store.commit("loading/setLoading", false);
+      this.$store.commit("loadingBar/stop");
       if (this.apiStatus) {
         // トップページに移動する
+        this.$store.dispatch("flashMessage/showFlashMessage", MESSAGE_LOGIN);
         this.$router.push("/admin");
       }
     },

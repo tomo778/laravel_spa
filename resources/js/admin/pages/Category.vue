@@ -21,29 +21,22 @@
             <td>{{ category.title }}</td>
             <td>{{ category.text}}</td>
             <td>
-              <RouterLink class="edit" :to="`/admin/category/edit/${category.id}`">更新</RouterLink>
+              <RouterLink class="btn btn-primary text-nowrap" :to="`/admin/category/edit/${category.id}`">更新</RouterLink>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
-    <loading :active.sync="isLoading" :can-cancel="true" :is-full-page="fullPage"></loading>
   </main>
 </template>
 
 <script>
 import { OK, STATUS, MESSAGE_UPDATE } from "../util";
-import Loading from "vue-loading-overlay";
-import "vue-loading-overlay/dist/vue-loading.css";
+
 export default {
-  components: {
-    Loading
-  },
   data() {
     return {
-      category_arr: [],
-      isLoading: false,
-      fullPage: true,
+      category_arr: []
     };
   },
   created() {
@@ -51,7 +44,7 @@ export default {
   },
   methods: {
     async list() {
-      this.isLoading = true;
+      this.$store.commit("loadingBar/start");
       const response = await axios.post(
         `/api/admin/category/list`
       );
@@ -60,7 +53,7 @@ export default {
         return false;
       }
       this.category_arr = response.data.data;
-      this.isLoading = false;
+      this.$store.commit("loadingBar/stop");
     }
   }
 };

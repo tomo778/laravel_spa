@@ -24,7 +24,6 @@ use Illuminate\Support\Facades\Route;
 Route::post('/register', 'Auth\RegisterController@register')->name('register');
 Route::post('/login', 'Auth\LoginController@login')->name('login');
 Route::post('/logout', 'Auth\LoginController@logout')->name('logout');
-Route::get('/user', 'Auth\LoginController@getUser');
 Route::get(
     '/user',
     function () {
@@ -79,6 +78,7 @@ Route::post('/admin/news', 'Admin\NewsController@list');
 Route::post('/admin/news/register', 'Admin\NewsController@register');
 Route::post('/admin/news/validation', 'Admin\NewsController@validation');
 Route::post('/admin/news/detail/{id}', 'Admin\NewsController@detail');
+Route::post('/admin/news/delete/{id}', 'Admin\NewsController@delete');
 Route::post('/admin/news/update', 'Admin\NewsController@update');
 Route::post('/admin/news/selectbox', 'Admin\NewsController@selectbox');
 Route::post('/admin/news/sarch', 'Admin\NewsController@sarch');

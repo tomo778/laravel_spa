@@ -6,7 +6,7 @@
       <h1 class="h2">一覧</h1>
     </div>
     <div class="table-responsive">
-      <table class="table table-striped table-sm">
+      <table class="table">
         <thead>
           <tr>
             <th>id</th>
@@ -21,34 +21,20 @@
             <td>{{ user.name }}</td>
             <td>{{ user.email }}</td>
             <td>
-              <RouterLink
-              class="edit"
-              :to="`/admin/staff/edit/${user.id}`"
-              >
-              更新
-              </RouterLink>
+              <RouterLink class="btn btn-primary text-nowrap" :to="`/admin/staff/edit/${user.id}`">更新</RouterLink>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
-    <loading
-      :active.sync="isLoading"
-      :is-full-page="fullPage"
-    ></loading>
   </main>
 </template>
 
 
 <script>
 import { OK } from "../util";
-import Loading from "vue-loading-overlay";
-import "vue-loading-overlay/dist/vue-loading.css";
 
 export default {
-  components: {
-    Loading
-  },
   data() {
     return {
       users: [],
@@ -60,9 +46,11 @@ export default {
   },
   methods: {
     async list() {
-      this.isLoading = true;
-      const response = await axios.post(`/api/admin/user/list?page=${this.page}`);
-
+      this.$store.commit("loadingBar/start");
+      const response = await axios.post(
+        `/api/admin/user/list?page=${this.page}`
+      );
+      this.$store.commit("loadingBar/stop");
       if (response.status !== OK) {
         this.$store.commit("error/setCode", response.status);
         return false;
@@ -70,7 +58,6 @@ export default {
       this.users = response.data.data;
       this.currentPage = response.data.current_page;
       this.lastPage = response.data.last_page;
-      this.isLoading = false;
     }
   },
   created() {

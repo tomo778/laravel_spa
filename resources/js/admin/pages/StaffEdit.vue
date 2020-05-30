@@ -74,8 +74,13 @@
 
 <script>
 import { mapState } from "vuex";
-import { MESSAGE_ERR, MESSAGE_CREATE, MESSAGE_UPDATE, OK, CREATED } from "../util";
-
+import {
+  MESSAGE_ERR,
+  MESSAGE_CREATE,
+  MESSAGE_UPDATE,
+  OK,
+  CREATED
+} from "../util";
 
 export default {
   props: {
@@ -98,7 +103,12 @@ export default {
   },
   methods: {
     async register() {
-      const response = await axios.post("/api/admin/register", this.registerForm);
+      this.$store.commit("loadingBar/start");
+      const response = await axios.post(
+        "/api/admin/register",
+        this.registerForm
+      );
+      this.$store.commit("loadingBar/stop");
       if (response.status !== CREATED) {
         this.registerErrors = response.data.errors;
         this.$store.commit("error/setCode", response.status);
@@ -114,11 +124,12 @@ export default {
       }
     },
     async update() {
+      this.$store.commit("loadingBar/start");
       const response = await axios.post(
         `/api/admin/user/update`,
         this.registerForm
       );
-
+      this.$store.commit("loadingBar/stop");
       if (response.status !== OK) {
         this.registerErrors = response.data.errors;
         this.$store.commit("error/setCode", response.status);
