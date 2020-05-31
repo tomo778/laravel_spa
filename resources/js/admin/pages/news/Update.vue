@@ -24,6 +24,7 @@ import {
 } from "../../util";
 import EditForm from "./components/EditForm.vue";
 import EditFooter from "../../components/EditFooter.vue";
+import DialogMixin from "../../mixins/DialogMixin";
 
 export default {
   components: {
@@ -80,39 +81,8 @@ export default {
         this.validation(event);
       }
       if (event == "delete") {
-        this.modal(event);
+        this.modal(event);//mixins
       }
-    },
-    async delete(event) {
-      const res = await axios.post(`/api/admin/news/delete/${this.id}`);
-      if (res.status !== OK) {
-        this.$store.commit("error/setCode", res.status);
-        return false;
-      }
-      this.$store.dispatch("flashMessage/showFlashMessage", MESSAGE_DELETE);
-      this.$router.push(`/admin/news/`);
-    },
-    modal(mode) {
-      this.$modal.show("dialog", {
-        title: "確認!",
-        text: "本当に宜しいでしょうか？",
-        buttons: [
-          {
-            title: "OK",
-            handler: () => {
-              if (mode == "update") {
-                this.update();
-              }
-              if (mode == "delete") {
-                this.delete();
-              }
-            }
-          },
-          {
-            title: "Close"
-          }
-        ]
-      });
     },
     async validation(mode) {
       this.$store.commit("loadingBar/start");
@@ -128,10 +98,10 @@ export default {
         return false;
       }
       this.clearError();
-      this.modal(mode);
+      this.modal(mode);//mixins
     },
     async update() {
-      this.$modal.hide("dialog");
+      this.hideDialog();//mixins
       this.$store.commit("loadingBar/start");
       const response = await axios.post(
         `/api/admin/news/update`,
@@ -145,9 +115,19 @@ export default {
       await this.$store.dispatch("categorys/categorys");
       this.$store.dispatch("flashMessage/showFlashMessage", MESSAGE_UPDATE);
     },
+    async delete(event) {
+      const res = await axios.post(`/api/admin/news/delete/${this.id}`);
+      if (res.status !== OK) {
+        this.$store.commit("error/setCode", res.status);
+        return false;
+      }
+      this.$store.dispatch("flashMessage/showFlashMessage", MESSAGE_DELETE);
+      this.$router.push(`/admin/news/`);
+    },
     clearError() {
       this.formErrors = {};
     }
-  }
+  },
+  mixins: [DialogMixin]
 };
 </script>

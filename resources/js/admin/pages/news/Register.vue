@@ -24,6 +24,7 @@ import {
 } from "../../util";
 import EditForm from "./components/EditForm.vue";
 import EditFooter from "../../components/EditFooter.vue";
+import DialogMixin from "../../mixins/DialogMixin";
 
 export default {
   components: {
@@ -68,26 +69,6 @@ export default {
     mode(event) {
       this.validation(event);
     },
-    modal(mode) {
-      let title = "確認a!";
-      this.$modal.show("dialog", {
-        title: title,
-        text: "本当に宜しいでしょうか？",
-        buttons: [
-          {
-            title: "OK",
-            handler: () => {
-              if (mode == "register") {
-                this.register();
-              }
-            }
-          },
-          {
-            title: "Close"
-          }
-        ]
-      });
-    },
     async validation(mode) {
       this.$store.commit("loadingBar/start");
       const response = await axios.post(
@@ -102,10 +83,10 @@ export default {
         return false;
       }
       this.clearError();
-      this.modal(mode);
+      this.modal(mode);//mixins
     },
     async register() {
-      this.$modal.hide("dialog");
+      this.hideDialog();//mixins
       this.$store.commit("loadingBar/start");
       const response = await axios.post(
         `/api/admin/news/register`,
@@ -122,6 +103,7 @@ export default {
     clearError() {
       this.formErrors = {};
     }
-  }
+  },
+  mixins: [DialogMixin]
 };
 </script>

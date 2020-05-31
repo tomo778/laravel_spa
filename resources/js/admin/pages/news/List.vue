@@ -27,6 +27,8 @@
               <th>タイトル</th>
               <th>本文</th>
               <th>カテゴリ</th>
+              <th>登録</th>
+              <th>更新</th>
               <th></th>
             </tr>
           </thead>
@@ -46,14 +48,16 @@
                   class="badge badge-secondary"
                 >{{ config.array_status[news.status] }}</span>
               </td>
-              <td width="200">{{ news.title }}</td>
-              <td width="1500">{{ news.text}}</td>
+              <td width="200">{{ news.title | truncate(50, '...') }}</td>
+              <td width="1500">{{ news.text | truncate(50, '...') }}</td>
               <td width="200">
                 <div v-for="news in news.add_category" :key="news.id">
-                  {{news.title}}
-                  <hr />
+                  ・{{news.title}}
+                  <br />
                 </div>
               </td>
+              <td class="text-nowrap">{{ news.created_at | moment_format("LLL")}}</td>
+              <td class="text-nowrap">{{ news.updated_at | moment_format("LLL")}}</td>
               <td width="100">
                 <RouterLink
                   class="btn btn-primary text-nowrap"
@@ -129,11 +133,14 @@ export default {
         this.$store.commit("error/setCode", response.status);
         return false;
       }
-      //page=1以外の時検索され、データが0の場合
+      //page=1以外の時検索されてデータが0の場合
       //page=1に戻す
       if (response.data.data.length == 0) {
+        this.page = 1;
+        //get値削除
+        history.pushState(null, null, "/admin/news/");
         response = await axios.post(
-          `/api/admin/${this.pluginName}/sarch?page=1`,
+          `/api/admin/${this.pluginName}/sarch?page=${this.page}`,
           this.formSearch
         );
         if (response.status !== OK) {

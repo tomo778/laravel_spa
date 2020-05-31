@@ -4026,6 +4026,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
 
 
 
@@ -4118,18 +4122,21 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
               case 7:
                 if (!(response.data.data.length == 0)) {
-                  _context2.next = 14;
+                  _context2.next = 16;
                   break;
                 }
 
-                _context2.next = 10;
-                return axios.post("/api/admin/".concat(_this2.pluginName, "/sarch?page=1"), _this2.formSearch);
+                _this2.page = 1; //get値削除
 
-              case 10:
+                history.pushState(null, null, "/admin/news/");
+                _context2.next = 12;
+                return axios.post("/api/admin/".concat(_this2.pluginName, "/sarch?page=").concat(_this2.page), _this2.formSearch);
+
+              case 12:
                 response = _context2.sent;
 
                 if (!(response.status !== _util__WEBPACK_IMPORTED_MODULE_1__["OK"])) {
-                  _context2.next = 14;
+                  _context2.next = 16;
                   break;
                 }
 
@@ -4137,7 +4144,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
                 return _context2.abrupt("return", false);
 
-              case 14:
+              case 16:
                 //
                 _this2.selectedCatIds = [];
                 _this2.isAllSelected = false; //
@@ -4147,7 +4154,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
                 _this2.$store.commit("loadingBar/stop");
 
-              case 19:
+              case 21:
               case "end":
                 return _context2.stop();
             }
@@ -4225,6 +4232,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../util */ "./resources/js/admin/util.js");
 /* harmony import */ var _components_EditForm_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/EditForm.vue */ "./resources/js/admin/pages/news/components/EditForm.vue");
 /* harmony import */ var _components_EditFooter_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../components/EditFooter.vue */ "./resources/js/admin/components/EditFooter.vue");
+/* harmony import */ var _mixins_DialogMixin__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../mixins/DialogMixin */ "./resources/js/admin/mixins/DialogMixin.js");
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -4247,6 +4255,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+
 
 
 
@@ -4323,27 +4332,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     mode: function mode(event) {
       this.validation(event);
     },
-    modal: function modal(mode) {
-      var _this2 = this;
-
-      var title = "確認a!";
-      this.$modal.show("dialog", {
-        title: title,
-        text: "本当に宜しいでしょうか？",
-        buttons: [{
-          title: "OK",
-          handler: function handler() {
-            if (mode == "register") {
-              _this2.register();
-            }
-          }
-        }, {
-          title: "Close"
-        }]
-      });
-    },
     validation: function validation(mode) {
-      var _this3 = this;
+      var _this2 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
         var response;
@@ -4351,33 +4341,34 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                _this3.$store.commit("loadingBar/start");
+                _this2.$store.commit("loadingBar/start");
 
                 _context2.next = 3;
-                return axios.post("/api/admin/news/validation", _this3.formDatas);
+                return axios.post("/api/admin/news/validation", _this2.formDatas);
 
               case 3:
                 response = _context2.sent;
 
-                _this3.$store.commit("loadingBar/stop");
+                _this2.$store.commit("loadingBar/stop");
 
                 if (!(response.status !== _util__WEBPACK_IMPORTED_MODULE_1__["OK"])) {
                   _context2.next = 10;
                   break;
                 }
 
-                _this3.formErrors = response.data.errors;
+                _this2.formErrors = response.data.errors;
 
-                _this3.$store.commit("error/setCode", response.status);
+                _this2.$store.commit("error/setCode", response.status);
 
-                _this3.$store.dispatch("flashMessage/showFlashMessage", _util__WEBPACK_IMPORTED_MODULE_1__["MESSAGE_ERR"]);
+                _this2.$store.dispatch("flashMessage/showFlashMessage", _util__WEBPACK_IMPORTED_MODULE_1__["MESSAGE_ERR"]);
 
                 return _context2.abrupt("return", false);
 
               case 10:
-                _this3.clearError();
+                _this2.clearError();
 
-                _this3.modal(mode);
+                _this2.modal(mode); //mixins
+
 
               case 12:
               case "end":
@@ -4388,7 +4379,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }))();
     },
     register: function register() {
-      var _this4 = this;
+      var _this3 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
         var response;
@@ -4396,12 +4387,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                _this4.$modal.hide("dialog");
+                _this3.hideDialog(); //mixins
 
-                _this4.$store.commit("loadingBar/start");
+
+                _this3.$store.commit("loadingBar/start");
 
                 _context3.next = 4;
-                return axios.post("/api/admin/news/register", _this4.formDatas);
+                return axios.post("/api/admin/news/register", _this3.formDatas);
 
               case 4:
                 response = _context3.sent;
@@ -4411,18 +4403,18 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   break;
                 }
 
-                _this4.$store.commit("error/setCode", response.status);
+                _this3.$store.commit("error/setCode", response.status);
 
                 return _context3.abrupt("return", false);
 
               case 8:
                 _context3.next = 10;
-                return _this4.$store.dispatch("categorys/categorys");
+                return _this3.$store.dispatch("categorys/categorys");
 
               case 10:
-                _this4.$store.dispatch("flashMessage/showFlashMessage", _util__WEBPACK_IMPORTED_MODULE_1__["MESSAGE_CREATE"]);
+                _this3.$store.dispatch("flashMessage/showFlashMessage", _util__WEBPACK_IMPORTED_MODULE_1__["MESSAGE_CREATE"]);
 
-                _this4.$router.push("/admin/news/edit/".concat(response.data));
+                _this3.$router.push("/admin/news/edit/".concat(response.data));
 
               case 12:
               case "end":
@@ -4435,7 +4427,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     clearError: function clearError() {
       this.formErrors = {};
     }
-  }
+  },
+  mixins: [_mixins_DialogMixin__WEBPACK_IMPORTED_MODULE_4__["default"]]
 });
 
 /***/ }),
@@ -4454,6 +4447,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../util */ "./resources/js/admin/util.js");
 /* harmony import */ var _components_EditForm_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/EditForm.vue */ "./resources/js/admin/pages/news/components/EditForm.vue");
 /* harmony import */ var _components_EditFooter_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../components/EditFooter.vue */ "./resources/js/admin/components/EditFooter.vue");
+/* harmony import */ var _mixins_DialogMixin__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../mixins/DialogMixin */ "./resources/js/admin/mixins/DialogMixin.js");
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -4476,6 +4470,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+
 
 
 
@@ -4576,39 +4571,48 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
 
       if (event == "delete") {
-        this.modal(event);
+        this.modal(event); //mixins
       }
     },
-    "delete": function _delete(event) {
+    validation: function validation(mode) {
       var _this2 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
-        var res;
+        var response;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                _context2.next = 2;
-                return axios.post("/api/admin/news/delete/".concat(_this2.id));
+                _this2.$store.commit("loadingBar/start");
 
-              case 2:
-                res = _context2.sent;
+                _context2.next = 3;
+                return axios.post("/api/admin/news/validation", _this2.formDatas);
 
-                if (!(res.status !== _util__WEBPACK_IMPORTED_MODULE_1__["OK"])) {
-                  _context2.next = 6;
+              case 3:
+                response = _context2.sent;
+
+                _this2.$store.commit("loadingBar/stop");
+
+                if (!(response.status !== _util__WEBPACK_IMPORTED_MODULE_1__["OK"])) {
+                  _context2.next = 10;
                   break;
                 }
 
-                _this2.$store.commit("error/setCode", res.status);
+                _this2.formErrors = response.data.errors;
+
+                _this2.$store.commit("error/setCode", response.status);
+
+                _this2.$store.dispatch("flashMessage/showFlashMessage", _util__WEBPACK_IMPORTED_MODULE_1__["MESSAGE_ERR"]);
 
                 return _context2.abrupt("return", false);
 
-              case 6:
-                _this2.$store.dispatch("flashMessage/showFlashMessage", _util__WEBPACK_IMPORTED_MODULE_1__["MESSAGE_DELETE"]);
+              case 10:
+                _this2.clearError();
 
-                _this2.$router.push("/admin/news/");
+                _this2.modal(mode); //mixins
 
-              case 8:
+
+              case 12:
               case "end":
                 return _context2.stop();
             }
@@ -4616,30 +4620,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee2);
       }))();
     },
-    modal: function modal(mode) {
+    update: function update() {
       var _this3 = this;
-
-      this.$modal.show("dialog", {
-        title: "確認!",
-        text: "本当に宜しいでしょうか？",
-        buttons: [{
-          title: "OK",
-          handler: function handler() {
-            if (mode == "update") {
-              _this3.update();
-            }
-
-            if (mode == "delete") {
-              _this3["delete"]();
-            }
-          }
-        }, {
-          title: "Close"
-        }]
-      });
-    },
-    validation: function validation(mode) {
-      var _this4 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
         var response;
@@ -4647,33 +4629,34 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                _this4.$store.commit("loadingBar/start");
+                _this3.hideDialog(); //mixins
 
-                _context3.next = 3;
-                return axios.post("/api/admin/news/validation", _this4.formDatas);
 
-              case 3:
+                _this3.$store.commit("loadingBar/start");
+
+                _context3.next = 4;
+                return axios.post("/api/admin/news/update", _this3.formDatas);
+
+              case 4:
                 response = _context3.sent;
 
-                _this4.$store.commit("loadingBar/stop");
+                _this3.$store.commit("loadingBar/stop");
 
                 if (!(response.status !== _util__WEBPACK_IMPORTED_MODULE_1__["OK"])) {
-                  _context3.next = 10;
+                  _context3.next = 9;
                   break;
                 }
 
-                _this4.formErrors = response.data.errors;
-
-                _this4.$store.commit("error/setCode", response.status);
-
-                _this4.$store.dispatch("flashMessage/showFlashMessage", _util__WEBPACK_IMPORTED_MODULE_1__["MESSAGE_ERR"]);
+                _this3.$store.commit("error/setCode", response.status);
 
                 return _context3.abrupt("return", false);
 
-              case 10:
-                _this4.clearError();
+              case 9:
+                _context3.next = 11;
+                return _this3.$store.dispatch("categorys/categorys");
 
-                _this4.modal(mode);
+              case 11:
+                _this3.$store.dispatch("flashMessage/showFlashMessage", _util__WEBPACK_IMPORTED_MODULE_1__["MESSAGE_UPDATE"]);
 
               case 12:
               case "end":
@@ -4683,44 +4666,36 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee3);
       }))();
     },
-    update: function update() {
-      var _this5 = this;
+    "delete": function _delete(event) {
+      var _this4 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4() {
-        var response;
+        var res;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
-                _this5.$modal.hide("dialog");
+                _context4.next = 2;
+                return axios.post("/api/admin/news/delete/".concat(_this4.id));
 
-                _this5.$store.commit("loadingBar/start");
+              case 2:
+                res = _context4.sent;
 
-                _context4.next = 4;
-                return axios.post("/api/admin/news/update", _this5.formDatas);
-
-              case 4:
-                response = _context4.sent;
-
-                _this5.$store.commit("loadingBar/stop");
-
-                if (!(response.status !== _util__WEBPACK_IMPORTED_MODULE_1__["OK"])) {
-                  _context4.next = 9;
+                if (!(res.status !== _util__WEBPACK_IMPORTED_MODULE_1__["OK"])) {
+                  _context4.next = 6;
                   break;
                 }
 
-                _this5.$store.commit("error/setCode", response.status);
+                _this4.$store.commit("error/setCode", res.status);
 
                 return _context4.abrupt("return", false);
 
-              case 9:
-                _context4.next = 11;
-                return _this5.$store.dispatch("categorys/categorys");
+              case 6:
+                _this4.$store.dispatch("flashMessage/showFlashMessage", _util__WEBPACK_IMPORTED_MODULE_1__["MESSAGE_DELETE"]);
 
-              case 11:
-                _this5.$store.dispatch("flashMessage/showFlashMessage", _util__WEBPACK_IMPORTED_MODULE_1__["MESSAGE_UPDATE"]);
+                _this4.$router.push("/admin/news/");
 
-              case 12:
+              case 8:
               case "end":
                 return _context4.stop();
             }
@@ -4731,7 +4706,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     clearError: function clearError() {
       this.formErrors = {};
     }
-  }
+  },
+  mixins: [_mixins_DialogMixin__WEBPACK_IMPORTED_MODULE_4__["default"]]
 });
 
 /***/ }),
@@ -4966,7 +4942,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.fullview {\r\n  width: 100%;\r\n  height: 100%;\r\n  z-index: 9900;\r\n  background-color: rgba(255, 255, 255, 0.5);\r\n  position: fixed;\r\n  top: 0;\r\n  left: 0;\n}\n.progress-bar-bg {\r\n  width: 100%;\r\n  height: 3px;\r\n  background: #eee;\n}\n.progress-bar-bg .progress-bar {\r\n  overflow: no-display;\r\n  width: 0;\r\n  height: 3px;\r\n  background: #1496ed;\r\n  background-position: 100px 100px;\r\n  -webkit-animation-name: moveIndeterminate;\r\n          animation-name: moveIndeterminate;\r\n  -webkit-animation-duration: 5s;\r\n          animation-duration: 5s;\r\n  -webkit-animation-timing-function: all 5s cubic-bezier(0.235, 0.285, 0.975, 0.055);\r\n          animation-timing-function: all 5s cubic-bezier(0.235, 0.285, 0.975, 0.055);\n}\n@-webkit-keyframes moveIndeterminate {\n0% {\r\n    width: 0;\n}\n10% {\r\n    width: 15%;\n}\n100% {\r\n    width: 100%;\n}\n}\n@keyframes moveIndeterminate {\n0% {\r\n    width: 0;\n}\n10% {\r\n    width: 15%;\n}\n100% {\r\n    width: 100%;\n}\n}\r\n", ""]);
+exports.push([module.i, "\n.fullview {\r\n  width: 100%;\r\n  height: 100%;\r\n  z-index: 9900;\r\n  -background-color: rgba(255, 255, 255, 0.5);\r\n  position: fixed;\r\n  top: 0;\r\n  left: 0;\n}\n.progress-bar-bg {\r\n  width: 100%;\r\n  height: 3px;\r\n  background: #eee;\n}\n.progress-bar-bg .progress-bar {\r\n  overflow: no-display;\r\n  width: 0;\r\n  height: 3px;\r\n  background: #1496ed;\r\n  background-position: 100px 100px;\r\n  -webkit-animation-name: moveIndeterminate;\r\n          animation-name: moveIndeterminate;\r\n  -webkit-animation-duration: 5s;\r\n          animation-duration: 5s;\r\n  -webkit-animation-timing-function: all 5s cubic-bezier(0.235, 0.285, 0.975, 0.055);\r\n          animation-timing-function: all 5s cubic-bezier(0.235, 0.285, 0.975, 0.055);\n}\n@-webkit-keyframes moveIndeterminate {\n0% {\r\n    width: 0;\n}\n10% {\r\n    width: 15%;\n}\n100% {\r\n    width: 100%;\n}\n}\n@keyframes moveIndeterminate {\n0% {\r\n    width: 0;\n}\n10% {\r\n    width: 15%;\n}\n100% {\r\n    width: 100%;\n}\n}\r\n", ""]);
 
 // exports
 
@@ -35644,6 +35620,10 @@ var render = function() {
                         _vm._v(" "),
                         _c("th", [_vm._v("カテゴリ")]),
                         _vm._v(" "),
+                        _c("th", [_vm._v("登録")]),
+                        _vm._v(" "),
+                        _c("th", [_vm._v("更新")]),
+                        _vm._v(" "),
                         _c("th")
                       ])
                     ]),
@@ -35728,11 +35708,15 @@ var render = function() {
                           ]),
                           _vm._v(" "),
                           _c("td", { attrs: { width: "200" } }, [
-                            _vm._v(_vm._s(news.title))
+                            _vm._v(
+                              _vm._s(_vm._f("truncate")(news.title, 50, "..."))
+                            )
                           ]),
                           _vm._v(" "),
                           _c("td", { attrs: { width: "1500" } }, [
-                            _vm._v(_vm._s(news.text))
+                            _vm._v(
+                              _vm._s(_vm._f("truncate")(news.text, 50, "..."))
+                            )
                           ]),
                           _vm._v(" "),
                           _c(
@@ -35741,15 +35725,31 @@ var render = function() {
                             _vm._l(news.add_category, function(news) {
                               return _c("div", { key: news.id }, [
                                 _vm._v(
-                                  "\n                " +
+                                  "\n                ・" +
                                     _vm._s(news.title) +
                                     "\n                "
                                 ),
-                                _c("hr")
+                                _c("br")
                               ])
                             }),
                             0
                           ),
+                          _vm._v(" "),
+                          _c("td", { staticClass: "text-nowrap" }, [
+                            _vm._v(
+                              _vm._s(
+                                _vm._f("moment_format")(news.created_at, "LLL")
+                              )
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("td", { staticClass: "text-nowrap" }, [
+                            _vm._v(
+                              _vm._s(
+                                _vm._f("moment_format")(news.updated_at, "LLL")
+                              )
+                            )
+                          ]),
                           _vm._v(" "),
                           _c(
                             "td",
@@ -57987,6 +57987,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _router__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./router */ "./resources/js/admin/router.js");
 /* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./store */ "./resources/js/admin/store/index.js");
 /* harmony import */ var _App_vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./App.vue */ "./resources/js/admin/App.vue");
+/* harmony import */ var _filters__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./filters */ "./resources/js/admin/filters.js");
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -58007,6 +58008,10 @@ vue__WEBPACK_IMPORTED_MODULE_2___default.a.use(vue_js_modal__WEBPACK_IMPORTED_MO
 
 
 
+
+Object.keys(_filters__WEBPACK_IMPORTED_MODULE_8__).forEach(function (key) {
+  vue__WEBPACK_IMPORTED_MODULE_2___default.a.filter(key, _filters__WEBPACK_IMPORTED_MODULE_8__[key]);
+});
 
 var createApp = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
@@ -58586,6 +58591,60 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/admin/filters.js":
+/*!***************************************!*\
+  !*** ./resources/js/admin/filters.js ***!
+  \***************************************/
+/*! exports provided: truncate, moment_format */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "truncate", function() { return truncate; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "moment_format", function() { return moment_format; });
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);
+
+/**
+ * 指定文字数以上カット
+ * @param {int} length
+ * @param {String} omission
+ * @returns {String}
+ */
+
+function truncate(value, length, omission) {
+  var length = length ? parseInt(length, 10) : 20;
+  var ommision = omission ? omission.toString() : '...';
+
+  if (value.length <= length) {
+    return value;
+  }
+
+  return value.substring(0, length) + ommision;
+}
+/**
+ * 日付時間フォーマット
+ * @param {String} type
+ * @returns {String}
+ */
+
+function moment_format(value, type) {
+  moment__WEBPACK_IMPORTED_MODULE_0___default.a.locale("ja");
+
+  switch (type) {
+    case "LL":
+      return moment__WEBPACK_IMPORTED_MODULE_0___default()(value).format("LL");
+
+    case "LLL":
+      return moment__WEBPACK_IMPORTED_MODULE_0___default()(value).format("LLL");
+
+    default:
+      return moment__WEBPACK_IMPORTED_MODULE_0___default()(value).format("LLLL");
+  }
+}
+
+/***/ }),
+
 /***/ "./resources/js/admin/layout/DefaultLayout.vue":
 /*!*****************************************************!*\
   !*** ./resources/js/admin/layout/DefaultLayout.vue ***!
@@ -58724,6 +58783,70 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/admin/mixins/DialogMixin.js":
+/*!**************************************************!*\
+  !*** ./resources/js/admin/mixins/DialogMixin.js ***!
+  \**************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../util */ "./resources/js/admin/util.js");
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      config: [],
+      title: _util__WEBPACK_IMPORTED_MODULE_0__["DIALOG_CREATE"].title,
+      text: _util__WEBPACK_IMPORTED_MODULE_0__["DIALOG_CREATE"].text
+    };
+  },
+  methods: {
+    modal: function modal(mode) {
+      var _this = this;
+
+      if (mode == "update") {
+        this.title = _util__WEBPACK_IMPORTED_MODULE_0__["DIALOG_UPDATE"].title;
+        this.text = _util__WEBPACK_IMPORTED_MODULE_0__["DIALOG_UPDATE"].text;
+      }
+
+      if (mode == "delete") {
+        this.title = _util__WEBPACK_IMPORTED_MODULE_0__["DIALOG_DELETE"].title;
+        this.text = _util__WEBPACK_IMPORTED_MODULE_0__["DIALOG_DELETE"].text;
+      }
+
+      this.$modal.show("dialog", {
+        title: this.title,
+        text: this.text,
+        buttons: [{
+          title: "OK",
+          handler: function handler() {
+            if (mode == "register") {
+              _this.register();
+            }
+
+            if (mode == "update") {
+              _this.update();
+            }
+
+            if (mode == "delete") {
+              _this["delete"]();
+            }
+          }
+        }, {
+          title: "Close"
+        }]
+      });
+    },
+    hideDialog: function hideDialog() {
+      this.$modal.hide("dialog");
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./resources/js/admin/mixins/SelectMixin.js":
 /*!**************************************************!*\
   !*** ./resources/js/admin/mixins/SelectMixin.js ***!
@@ -58748,14 +58871,14 @@ __webpack_require__.r(__webpack_exports__);
 
         this.isAllSelected = true;
       }
-    },
-    select: function select() {
-      if (this.selectedCatIds.length !== this.result.length) {
-        this.isAllSelected = false;
-      } else {
-        this.isAllSelected = true;
-      }
-    }
+    } // select() {
+    //   if (this.selectedCatIds.length !== this.result.length) {
+    //     this.isAllSelected = false;
+    //   } else {
+    //     this.isAllSelected = true;
+    //   }
+    // }
+
   }
 });
 
@@ -60636,7 +60759,7 @@ var mutations = {
 /*!************************************!*\
   !*** ./resources/js/admin/util.js ***!
   \************************************/
-/*! exports provided: OK, CREATED, INTERNAL_SERVER_ERROR, UNPROCESSABLE_ENTITY, UNAUTHORIZED, NOT_FOUND, MESSAGE_ERR, MESSAGE_CREATE, MESSAGE_UPDATE, MESSAGE_DELETE, MESSAGE_LOGIN, plugins */
+/*! exports provided: OK, CREATED, INTERNAL_SERVER_ERROR, UNPROCESSABLE_ENTITY, UNAUTHORIZED, NOT_FOUND, MESSAGE_ERR, MESSAGE_CREATE, MESSAGE_UPDATE, MESSAGE_DELETE, MESSAGE_LOGIN, DIALOG_CREATE, DIALOG_UPDATE, DIALOG_DELETE, plugins */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -60652,6 +60775,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MESSAGE_UPDATE", function() { return MESSAGE_UPDATE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MESSAGE_DELETE", function() { return MESSAGE_DELETE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MESSAGE_LOGIN", function() { return MESSAGE_LOGIN; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DIALOG_CREATE", function() { return DIALOG_CREATE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DIALOG_UPDATE", function() { return DIALOG_UPDATE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DIALOG_DELETE", function() { return DIALOG_DELETE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "plugins", function() { return plugins; });
 //各種レスポンスコード
 var OK = 200;
@@ -60685,6 +60811,19 @@ var MESSAGE_LOGIN = {
   text: "ログインしました！",
   duration: 3000,
   mode: 'done'
+}; //
+
+var DIALOG_CREATE = {
+  title: "確認!",
+  text: 'データを作成します。宜しいでしょうか？'
+};
+var DIALOG_UPDATE = {
+  title: "更新確認!",
+  text: 'データを更新します。宜しいでしょうか？'
+};
+var DIALOG_DELETE = {
+  title: "削除確認!",
+  text: 'データを削除します。宜しいでしょうか？'
 }; // export const STATUS = {
 //   1: "公開",
 //   2: "非公開"

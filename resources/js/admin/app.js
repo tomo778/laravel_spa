@@ -10,6 +10,10 @@ Vue.use(VModal, { dialog: true })
 import router from './router'
 import store from './store'
 import App from './App.vue'
+import * as filters from './filters';
+Object.keys(filters).forEach(key => {
+  Vue.filter(key, filters[key]);
+});
 
 const createApp = async () => {
   await store.dispatch('auth/currentUser')

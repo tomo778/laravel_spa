@@ -12,12 +12,12 @@ export default {
         this.isAllSelected = true;
       }
     },
-    select() {
-      if (this.selectedCatIds.length !== this.result.length) {
-        this.isAllSelected = false;
-      } else {
-        this.isAllSelected = true;
-      }
-    }
+    // select() {
+    //   if (this.selectedCatIds.length !== this.result.length) {
+    //     this.isAllSelected = false;
+    //   } else {
+    //     this.isAllSelected = true;
+    //   }
+    // }
   }
 }

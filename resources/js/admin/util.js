@@ -12,7 +12,10 @@ export const MESSAGE_CREATE = { text: "登録しました！", duration: 3000, m
 export const MESSAGE_UPDATE = { text: "更新しました！", duration: 3000, mode: 'done' }
 export const MESSAGE_DELETE = { text: "削除しました！", duration: 3000, mode: 'done' }
 export const MESSAGE_LOGIN = { text: "ログインしました！", duration: 3000, mode: 'done' }
-
+//
+export const DIALOG_CREATE = { title: "確認!", text: 'データを作成します。宜しいでしょうか？' }
+export const DIALOG_UPDATE = { title: "更新確認!", text: 'データを更新します。宜しいでしょうか？' }
+export const DIALOG_DELETE = { title: "削除確認!", text: 'データを削除します。宜しいでしょうか？' }
 
 // export const STATUS = {
 //   1: "公開",
