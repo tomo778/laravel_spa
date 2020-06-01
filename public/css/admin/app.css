@@ -10901,6 +10901,10 @@ body,
   width: 200px;
 }
 
+.sidebar .active > span {
+  color: #007bff !important;
+}
+
 #login,
 body,
 html {

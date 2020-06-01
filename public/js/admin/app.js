@@ -2298,44 +2298,15 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../util */ "./resources/js/admin/util.js");
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../util */ "./resources/js/admin/util.js");
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 //
 //
 //
@@ -2364,8 +2335,39 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      plugins: _util__WEBPACK_IMPORTED_MODULE_0__["plugins"]
+      plugins: _util__WEBPACK_IMPORTED_MODULE_1__["plugins"],
+      isActive: null
     };
+  },
+  watch: {
+    $route: {
+      handler: function handler() {
+        var _this = this;
+
+        return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+          return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+            while (1) {
+              switch (_context.prev = _context.next) {
+                case 0:
+                  _context.next = 2;
+                  return _this.Active();
+
+                case 2:
+                case "end":
+                  return _context.stop();
+              }
+            }
+          }, _callee);
+        }))();
+      },
+      immediate: true
+    }
+  },
+  methods: {
+    Active: function Active() {
+      var words = window.location.pathname.split("/");
+      this.isActive = words[2];
+    }
   }
 });
 
@@ -34238,59 +34240,46 @@ var render = function() {
         _c(
           "ul",
           { staticClass: "nav flex-column" },
-          [
-            _c(
-              "li",
-              { staticClass: "nav-item" },
-              [
-                _c(
-                  "RouterLink",
-                  { staticClass: "nav-link", attrs: { to: "/admin" } },
-                  [
-                    _c("span", { attrs: { "data-feather": "home" } }),
-                    _vm._v("\n          Dashboard\n        ")
-                  ]
-                ),
-                _vm._v(" "),
-                _c("hr")
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _vm._l(_vm.plugins, function(plugin) {
-              return _c("li", { key: plugin.plugin, staticClass: "nav-item" }, [
-                _c("a", { staticClass: "nav-link", attrs: { href: "#" } }, [
+          _vm._l(_vm.plugins, function(plugin, index) {
+            return _c("li", { key: plugin.plugin, staticClass: "nav-item" }, [
+              _c(
+                "span",
+                {
+                  staticClass: "nav-link",
+                  class: { active: plugin.plugin === _vm.isActive }
+                },
+                [
                   _c("span", { attrs: { "data-feather": plugin.feather } }),
                   _vm._v("\n          " + _vm._s(plugin.name) + "\n        ")
-                ]),
-                _vm._v(" "),
-                _c(
-                  "ul",
-                  _vm._l(plugin.child, function(child) {
-                    return _c(
-                      "li",
-                      { key: child.plugin },
-                      [
-                        _c(
-                          "RouterLink",
-                          {
-                            staticClass: "nav-link",
-                            attrs: { to: { path: child.path } }
-                          },
-                          [_vm._v(_vm._s(child.name))]
-                        )
-                      ],
-                      1
-                    )
-                  }),
-                  0
-                ),
-                _vm._v(" "),
-                _c("hr")
-              ])
-            })
-          ],
-          2
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "ul",
+                _vm._l(plugin.child, function(child, index_child) {
+                  return _c(
+                    "li",
+                    { key: child.plugin },
+                    [
+                      _c(
+                        "RouterLink",
+                        {
+                          staticClass: "nav-link",
+                          attrs: { to: { path: child.path } }
+                        },
+                        [_vm._v(_vm._s(child.name))]
+                      )
+                    ],
+                    1
+                  )
+                }),
+                0
+              ),
+              _vm._v(" "),
+              _c("hr")
+            ])
+          }),
+          0
         )
       ])
     ]
@@ -60831,6 +60820,14 @@ var DIALOG_DELETE = {
 //サイドバー配列
 
 var plugins = [{
+  plugin: undefined,
+  name: 'Dashboard',
+  feather: 'home',
+  child: [{
+    name: 'トップ',
+    path: '/admin'
+  }]
+}, {
   plugin: 'staff',
   name: 'スタッフ',
   feather: 'users',
@@ -60851,14 +60848,19 @@ var plugins = [{
   }, {
     name: '登録・更新',
     path: '/admin/news/edit'
-  }, {
-    name: 'カテゴリ',
+  }]
+}, {
+  plugin: 'category',
+  name: 'カテゴリ',
+  feather: 'link',
+  child: [{
+    name: '一覧',
     path: '/admin/category'
   }, {
-    name: 'カテゴリ登録・更新',
+    name: '登録・更新',
     path: '/admin/category/edit'
   }, {
-    name: 'カテゴリ並び替え',
+    name: '並び替え',
     path: '/admin/category/sort'
   }]
 }, {

@@ -25,6 +25,17 @@ export const DIALOG_DELETE = { title: "削除確認!", text: 'データを削除
 //サイドバー配列
 export const plugins = [
   {
+    plugin: undefined,
+    name: 'Dashboard',
+    feather: 'home',
+    child: [
+      {
+        name: 'トップ',
+        path: '/admin',
+      }
+    ]
+  },
+  {
     plugin: 'staff',
     name: 'スタッフ',
     feather: 'users',
@@ -52,16 +63,23 @@ export const plugins = [
         name: '登録・更新',
         path: '/admin/news/edit',
       },
+    ]
+  },
+  {
+    plugin: 'category',
+    name: 'カテゴリ',
+    feather: 'link',
+    child: [
       {
-        name: 'カテゴリ',
+        name: '一覧',
         path: '/admin/category',
       },
       {
-        name: 'カテゴリ登録・更新',
+        name: '登録・更新',
         path: '/admin/category/edit',
       },
       {
-        name: 'カテゴリ並び替え',
+        name: '並び替え',
         path: '/admin/category/sort',
       },
     ]
