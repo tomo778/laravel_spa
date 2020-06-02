@@ -67,7 +67,6 @@ export default {
   animation-duration: 5s;
   animation-timing-function: all 5s cubic-bezier(0.235, 0.285, 0.975, 0.055);
 }
-
 @keyframes moveIndeterminate {
   0% {
     width: 0;
