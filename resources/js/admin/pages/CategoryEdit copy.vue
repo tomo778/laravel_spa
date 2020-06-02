@@ -35,21 +35,6 @@
         </div>
       </div>
 
-      <div class="form-group row">
-        <label for="inputEmail" class="col-sm-2 col-form-label">タイトル2</label>
-        <div class="col-sm-10">
-          <div v-for="(todo, index) in todoList" :key="index" class="form">
-            <div class="input-group mb-2">
-              <div class="input-group-prepend">
-                <div v-on:click.prevent="deleteForm(index)" class="input-group-text">削除</div>
-              </div>
-              <input type="text" class="form-control" id="inlineFormInputGroup" placeholder="タグ名" v-model="todo.tag"/>
-            </div>
-          </div>
-          <button v-on:click.prevent="addForm" class="btn btn-primary">追加</button>
-        </div>
-      </div>
-
       <footer class="fixed-bottom bg-white p-2 text-center">
         <button
           v-if="!this.id"
@@ -80,11 +65,6 @@ export default {
   },
   data() {
     return {
-      todoList: [
-        {
-          tag: ""
-        }
-      ],
       title: "",
       registerErrors: [],
       registerForm: {
@@ -95,19 +75,7 @@ export default {
       }
     };
   },
-  // created() {
-  //   this.addForm();
-  // },
   methods: {
-    addForm() {
-      const additionalForm = {
-        tag: ""
-      };
-      this.todoList.push(additionalForm);
-    },
-    deleteForm(id) {
-      this.todoList.splice(id, 1);
-    },
     modal(mode) {
       this.$modal.show("dialog", {
         title: "確認!",

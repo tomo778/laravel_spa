@@ -2087,6 +2087,13 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -2095,10 +2102,36 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 /* harmony default export */ __webpack_exports__["default"] = ({
-  computed: {
-    isProcessing: function isProcessing() {
-      return this.$store.state.loadingBar.progressBar.processing;
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])({
+    loadingBar: "loadingBar/processing"
+  })),
+  watch: {
+    loadingBar: function loadingBar() {
+      this.processing();
+    }
+  },
+  data: function data() {
+    return {
+      isProcessing: false
+    };
+  },
+  methods: {
+    processing: function processing() {
+      var _this = this;
+
+      if (this.loadingBar == true) {
+        this.isProcessing = true;
+      } else {
+        var dom = document.querySelector(".progress-bar");
+        dom.style.animationPlayState = "paused";
+        dom.style.animation = "none";
+        dom.style.width = "100%";
+        setTimeout(function () {
+          _this.isProcessing = false;
+        }, 300);
+      }
     }
   }
 });
@@ -2792,6 +2825,21 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2803,6 +2851,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   data: function data() {
     return {
+      todoList: [{
+        tag: ""
+      }],
       title: "",
       registerErrors: [],
       registerForm: {
@@ -2813,7 +2864,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
     };
   },
+  // created() {
+  //   this.addForm();
+  // },
   methods: {
+    addForm: function addForm() {
+      var additionalForm = {
+        tag: ""
+      };
+      this.todoList.push(additionalForm);
+    },
+    deleteForm: function deleteForm(id) {
+      this.todoList.splice(id, 1);
+    },
     modal: function modal(mode) {
       var _this = this;
 
@@ -4944,7 +5007,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.fullview {\r\n  width: 100%;\r\n  height: 100%;\r\n  z-index: 9900;\r\n  -background-color: rgba(255, 255, 255, 0.5);\r\n  position: fixed;\r\n  top: 0;\r\n  left: 0;\n}\n.progress-bar-bg {\r\n  width: 100%;\r\n  height: 3px;\r\n  background: #eee;\n}\n.progress-bar-bg .progress-bar {\r\n  overflow: no-display;\r\n  width: 0;\r\n  height: 3px;\r\n  background: #1496ed;\r\n  background-position: 100px 100px;\r\n  -webkit-animation-name: moveIndeterminate;\r\n          animation-name: moveIndeterminate;\r\n  -webkit-animation-duration: 5s;\r\n          animation-duration: 5s;\r\n  -webkit-animation-timing-function: all 5s cubic-bezier(0.235, 0.285, 0.975, 0.055);\r\n          animation-timing-function: all 5s cubic-bezier(0.235, 0.285, 0.975, 0.055);\n}\n@-webkit-keyframes moveIndeterminate {\n0% {\r\n    width: 0;\n}\n10% {\r\n    width: 15%;\n}\n100% {\r\n    width: 100%;\n}\n}\n@keyframes moveIndeterminate {\n0% {\r\n    width: 0;\n}\n10% {\r\n    width: 15%;\n}\n100% {\r\n    width: 100%;\n}\n}\r\n", ""]);
+exports.push([module.i, "\n.fullview {\r\n  width: 100%;\r\n  height: 100%;\r\n  z-index: 9900;\r\n  background-color: rgba(255, 255, 255, 0.5);\r\n  position: fixed;\r\n  top: 0;\r\n  left: 0;\n}\n.progress-bar-bg {\r\n  width: 100%;\r\n  height: 3px;\r\n  background: #eee;\n}\n.progress-bar-bg .progress-bar {\r\n  overflow: no-display;\r\n  width: 0;\r\n  height: 3px;\r\n  background: #1496ed;\r\n  background-position: 100px 100px;\r\n  -webkit-animation-name: moveIndeterminate;\r\n          animation-name: moveIndeterminate;\r\n  -webkit-animation-duration: 5s;\r\n          animation-duration: 5s;\r\n  -webkit-animation-timing-function: all 5s cubic-bezier(0.235, 0.285, 0.975, 0.055);\r\n          animation-timing-function: all 5s cubic-bezier(0.235, 0.285, 0.975, 0.055);\n}\n@-webkit-keyframes moveIndeterminate {\n0% {\r\n    width: 0;\n}\n10% {\r\n    width: 15%;\n}\n100% {\r\n    width: 100%;\n}\n}\n@keyframes moveIndeterminate {\n0% {\r\n    width: 0;\n}\n10% {\r\n    width: 15%;\n}\n100% {\r\n    width: 100%;\n}\n}\r\n", ""]);
 
 // exports
 
@@ -34658,6 +34721,86 @@ var render = function() {
           ])
         ]),
         _vm._v(" "),
+        _c("div", { staticClass: "form-group row" }, [
+          _c(
+            "label",
+            {
+              staticClass: "col-sm-2 col-form-label",
+              attrs: { for: "inputEmail" }
+            },
+            [_vm._v("タイトル2")]
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "col-sm-10" },
+            [
+              _vm._l(_vm.todoList, function(todo, index) {
+                return _c("div", { key: index, staticClass: "form" }, [
+                  _c("div", { staticClass: "input-group mb-2" }, [
+                    _c("div", { staticClass: "input-group-prepend" }, [
+                      _c(
+                        "div",
+                        {
+                          staticClass: "input-group-text",
+                          on: {
+                            click: function($event) {
+                              $event.preventDefault()
+                              return _vm.deleteForm(index)
+                            }
+                          }
+                        },
+                        [_vm._v("削除")]
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: todo.tag,
+                          expression: "todo.tag"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: {
+                        type: "text",
+                        id: "inlineFormInputGroup",
+                        placeholder: "タグ名"
+                      },
+                      domProps: { value: todo.tag },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(todo, "tag", $event.target.value)
+                        }
+                      }
+                    })
+                  ])
+                ])
+              }),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-primary",
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.addForm($event)
+                    }
+                  }
+                },
+                [_vm._v("追加")]
+              )
+            ],
+            2
+          )
+        ]),
+        _vm._v(" "),
         _c("footer", { staticClass: "fixed-bottom bg-white p-2 text-center" }, [
           !this.id
             ? _c(
@@ -36275,7 +36418,7 @@ var render = function() {
       _c(
         "td",
         [
-          _c("div", [
+          _c("span", { staticClass: "mr-4" }, [
             _c("input", {
               directives: [
                 {
@@ -36301,7 +36444,7 @@ var render = function() {
           ]),
           _vm._v(" "),
           _vm._l(_vm.config.array_status, function(item, index) {
-            return _c("div", { key: index }, [
+            return _c("span", { key: index, staticClass: "mr-4" }, [
               _c("input", {
                 directives: [
                   {
@@ -60679,29 +60822,25 @@ var mutations = {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 var state = {
-  progressBar: {
-    processing: false
+  processing: false
+};
+var getters = {
+  processing: function processing(state) {
+    return state.processing;
   }
 };
 var mutations = {
-  start: function start(_ref) {
-    var progressBar = _ref.progressBar;
-    progressBar.processing = true;
+  start: function start(state, processing) {
+    state.processing = true;
   },
-  stop: function stop(_ref2) {
-    var progressBar = _ref2.progressBar;
-    var dom = document.querySelector(".progress-bar");
-    dom.style.animationPlayState = "paused";
-    dom.style.animation = "none";
-    dom.style.width = "100%";
-    setTimeout(function () {
-      progressBar.processing = false;
-    }, 300);
+  stop: function stop(state, processing) {
+    state.processing = false;
   }
 };
 /* harmony default export */ __webpack_exports__["default"] = ({
   namespaced: true,
   state: state,
+  getters: getters,
   mutations: mutations
 });
 

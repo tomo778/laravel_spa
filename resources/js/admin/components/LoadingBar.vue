@@ -7,10 +7,36 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
   computed: {
-    isProcessing() {
-      return this.$store.state.loadingBar.progressBar.processing;
+    ...mapGetters({
+      loadingBar: "loadingBar/processing"
+    })
+  },
+  watch: {
+    loadingBar() {
+      this.processing();
+    }
+  },
+  data() {
+    return {
+      isProcessing: false
+    };
+  },
+  methods: {
+    processing() {
+      if (this.loadingBar == true) {
+        this.isProcessing = true;
+      } else {
+        const dom = document.querySelector(".progress-bar");
+        dom.style.animationPlayState = "paused";
+        dom.style.animation = "none";
+        dom.style.width = "100%";
+        setTimeout(() => {
+          this.isProcessing = false;
+        }, 300);
+      }
     }
   }
 };
@@ -21,7 +47,7 @@ export default {
   width: 100%;
   height: 100%;
   z-index: 9900;
-  -background-color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(255, 255, 255, 0.5);
   position: fixed;
   top: 0;
   left: 0;

@@ -16,7 +16,7 @@
     <tr>
       <th>公開状態</th>
       <td>
-        <div>
+        <span class="mr-4">
           <input
             type="radio"
             v-bind:value="0"
@@ -26,8 +26,8 @@
             v-on:change="sarch"
           />
           <label for="all">すべて</label>
-        </div>
-        <div v-for="(item, index) in config.array_status" :key="index">
+        </span>
+        <span  class="mr-4" v-for="(item, index) in config.array_status" :key="index">
           <input
             type="radio"
             v-bind:value="index"
@@ -36,7 +36,7 @@
             v-on:change="sarch"
           />
           <label :for="index">{{item}}</label>
-        </div>
+        </span>
       </td>
     </tr>
   </table>
