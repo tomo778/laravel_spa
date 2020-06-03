@@ -79,6 +79,7 @@ import Pagination from "../../components/Pagination.vue";
 import SelectMixin from "../../mixins/SelectMixin";
 import SearchForm from "./components/SearchForm.vue";
 import Checkbox from "./components/Checkbox.vue";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   components: {
@@ -100,12 +101,16 @@ export default {
       isAllSelected: false,
       selectedCatIds: [],
       result: [],
-      config: [],
       formSearch: {
         status: "0",
         freeword: ""
       }
     };
+  },
+  computed: {
+    ...mapGetters({
+      config: "config/config",
+    })
   },
   watch: {
     $route: {
@@ -119,18 +124,23 @@ export default {
     this.init();
   },
   methods: {
+    ...mapActions({
+      loadingStart: "loadingBar/start",
+      loadingStop: "loadingBar/stop",
+      flashMessage: "flashMessage/showFlashMessage",
+      setCode: "error/setCode"
+    }),
     init() {
-      this.config = this.$store.getters["config/config"];
       this.sarch();
     },
     async sarch() {
-      this.$store.commit("loadingBar/start");
+      this.loadingStart();
       let response = await axios.post(
         `/api/admin/${this.pluginName}/sarch?page=${this.page}`,
         this.formSearch
       );
       if (response.status !== OK) {
-        this.$store.commit("error/setCode", response.status);
+        this.setCode(response.status);
         return false;
       }
       //page=1以外の時検索されてデータが0の場合
@@ -144,7 +154,7 @@ export default {
           this.formSearch
         );
         if (response.status !== OK) {
-          this.$store.commit("error/setCode", response.status);
+          this.setCode(response.status);
           return false;
         }
       }
@@ -154,23 +164,23 @@ export default {
       //
       this.pagination = response.data;
       this.result = response.data.data;
-      this.$store.commit("loadingBar/stop");
+      this.loadingStop();
     },
     async checkbox(selectedVal) {
       if (!confirm("本当にいいですか？")) {
         return;
       }
-      this.$store.commit("loadingBar/start");
-      const res = await axios.post(`/api/admin/${this.pluginName}/selectbox`, {
+      this.loadingStart();
+      const response = await axios.post(`/api/admin/${this.pluginName}/selectbox`, {
         mode: selectedVal,
         vals: this.selectedCatIds
       });
-      if (res.status !== OK) {
-        this.$store.commit("error/setCode", res.status);
+      if (response.status !== OK) {
+        this.setCode(response.status);
         return false;
       }
       this.sarch();
-      this.$store.dispatch("flashMessage/showFlashMessage", MESSAGE_UPDATE);
+      this.flashMessage(MESSAGE_UPDATE);
     }
   },
   mixins: [SelectMixin]

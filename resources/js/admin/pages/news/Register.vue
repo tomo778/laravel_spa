@@ -25,6 +25,7 @@ import {
 import EditForm from "./components/EditForm.vue";
 import EditFooter from "../../components/EditFooter.vue";
 import DialogMixin from "../../mixins/DialogMixin";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   components: {
@@ -33,7 +34,6 @@ export default {
   },
   data() {
     return {
-      config: [],
       arrayCategory: [],
       arrayMode: [],
       formErrors: {},
@@ -46,17 +46,27 @@ export default {
       }
     };
   },
+  computed: {
+    ...mapGetters({
+      config: "config/config"
+    })
+  },
   created() {
     this.init();
   },
   methods: {
+    ...mapActions({
+      loadingStart: "loadingBar/start",
+      loadingStop: "loadingBar/stop",
+      flashMessage: "flashMessage/showFlashMessage",
+      setCode: "error/setCode"
+    }),
     async init() {
-      this.$store.commit("loadingBar/start");
+      this.loadingStart();
       this.clearError();
-      this.config = this.$store.getters["config/config"];
       const res_category = await axios.post(`/api/admin/category`);
       if (res_category.status !== OK) {
-        this.$store.commit("error/setCode", res_category.status);
+        this.setCode(res_category.status);
         return false;
       }
       this.arrayCategory = res_category.data;
@@ -64,40 +74,40 @@ export default {
       this.formDatas.text = [];
       this.formDatas.category = [];
       this.arrayMode = ["register"];
-      this.$store.commit("loadingBar/stop");
+      this.loadingStop();
     },
     mode(event) {
       this.validation(event);
     },
     async validation(mode) {
-      this.$store.commit("loadingBar/start");
+      this.loadingStart();
       const response = await axios.post(
         `/api/admin/news/validation`,
         this.formDatas
       );
-      this.$store.commit("loadingBar/stop");
+      this.loadingStop();
       if (response.status !== OK) {
         this.formErrors = response.data.errors;
-        this.$store.commit("error/setCode", response.status);
-        this.$store.dispatch("flashMessage/showFlashMessage", MESSAGE_ERR);
+        this.setCode(response.status);
+        this.flashMessage(MESSAGE_ERR);
         return false;
       }
       this.clearError();
-      this.modal(mode);//mixins
+      this.modal(mode); //mixins
     },
     async register() {
-      this.hideDialog();//mixins
-      this.$store.commit("loadingBar/start");
+      this.hideDialog(); //mixins
+      this.loadingStart();
       const response = await axios.post(
         `/api/admin/news/register`,
         this.formDatas
       );
       if (response.status !== OK) {
-        this.$store.commit("error/setCode", response.status);
+        this.setCode(response.status);
         return false;
       }
-      await this.$store.dispatch("categorys/categorys");
-      this.$store.dispatch("flashMessage/showFlashMessage", MESSAGE_CREATE);
+      //await this.$store.dispatch("categorys/categorys");
+      this.flashMessage(MESSAGE_CREATE);
       this.$router.push(`/admin/news/edit/${response.data}`);
     },
     clearError() {

@@ -7,11 +7,17 @@ const getters = {
 }
 
 const mutations = {
-  start(state, processing) {
-    state.processing = true;
+  setProcessing(state, processing) {
+    state.processing = processing
+  }
+}
+
+const actions = {
+  start(context, data) {
+    context.commit('setProcessing', true);
   },
-  stop(state, processing) {
-    state.processing = false;
+  stop(context, data) {
+    context.commit('setProcessing', false);
   },
 }
 
@@ -19,5 +25,6 @@ export default {
   namespaced: true,
   state,
   getters,
-  mutations
+  mutations,
+  actions
 }

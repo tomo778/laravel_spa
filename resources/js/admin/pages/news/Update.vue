@@ -25,6 +25,7 @@ import {
 import EditForm from "./components/EditForm.vue";
 import EditFooter from "../../components/EditFooter.vue";
 import DialogMixin from "../../mixins/DialogMixin";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   components: {
@@ -43,7 +44,6 @@ export default {
       formErrors: {},
       arrayCategory: [],
       arrayMode: [],
-      config: [],
       formDatas: {
         id: "",
         category: [],
@@ -53,28 +53,38 @@ export default {
       }
     };
   },
+  computed: {
+    ...mapGetters({
+      config: "config/config"
+    })
+  },
   created() {
     this.init();
   },
   methods: {
+    ...mapActions({
+      loadingStart: "loadingBar/start",
+      loadingStop: "loadingBar/stop",
+      flashMessage: "flashMessage/showFlashMessage",
+      setCode: "error/setCode"
+    }),
     async init() {
-      this.$store.commit("loadingBar/start");
+      this.loadingStart();
       this.clearError();
-      this.config = this.$store.getters["config/config"];
       const res_category = await axios.post(`/api/admin/category`);
       if (res_category.status !== OK) {
-        this.$store.commit("error/setCode", res_category.status);
+        this.setCode(res_category.status);
         return false;
       }
       this.arrayCategory = res_category.data;
       const res_detail = await axios.post(`/api/admin/news/detail/${this.id}`);
       if (res_detail.status !== OK) {
-        this.$store.commit("error/setCode", res_detail.status);
+        this.setCode(res_detail.status);
         return false;
       }
       this.formDatas = res_detail.data;
       this.arrayMode = ["update", "delete"];
-      this.$store.commit("loadingBar/stop");
+      this.loadingStop();
     },
     mode(event) {
       if (event == "update") {
@@ -85,16 +95,16 @@ export default {
       }
     },
     async validation(mode) {
-      this.$store.commit("loadingBar/start");
+      this.loadingStart();
       const response = await axios.post(
         `/api/admin/news/validation`,
         this.formDatas
       );
-      this.$store.commit("loadingBar/stop");
+      this.loadingStop();
       if (response.status !== OK) {
         this.formErrors = response.data.errors;
-        this.$store.commit("error/setCode", response.status);
-        this.$store.dispatch("flashMessage/showFlashMessage", MESSAGE_ERR);
+        this.setCode(response.status);
+        this.flashMessage(MESSAGE_ERR);
         return false;
       }
       this.clearError();
@@ -102,26 +112,26 @@ export default {
     },
     async update() {
       this.hideDialog();//mixins
-      this.$store.commit("loadingBar/start");
+      this.loadingStart();
       const response = await axios.post(
         `/api/admin/news/update`,
         this.formDatas
       );
-      this.$store.commit("loadingBar/stop");
+      this.loadingStop();
       if (response.status !== OK) {
-        this.$store.commit("error/setCode", response.status);
+        this.setCode(response.status);
         return false;
       }
-      await this.$store.dispatch("categorys/categorys");
-      this.$store.dispatch("flashMessage/showFlashMessage", MESSAGE_UPDATE);
+      //await this.$store.dispatch("categorys/categorys");
+      this.flashMessage(MESSAGE_UPDATE);
     },
     async delete(event) {
-      const res = await axios.post(`/api/admin/news/delete/${this.id}`);
-      if (res.status !== OK) {
-        this.$store.commit("error/setCode", res.status);
+      const response = await axios.post(`/api/admin/news/delete/${this.id}`);
+      if (response.status !== OK) {
+        this.setCode(response.status);
         return false;
       }
-      this.$store.dispatch("flashMessage/showFlashMessage", MESSAGE_DELETE);
+      this.flashMessage(MESSAGE_DELETE);
       this.$router.push(`/admin/news/`);
     },
     clearError() {
